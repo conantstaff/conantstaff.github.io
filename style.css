@@ -1,23 +1,40 @@
+/* Importing Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f4f4f4;
-  padding: 20px;
+  font-family: 'Inter', sans-serif;
+  background-color: #eef2f7;
+  margin: 0;
+  padding: 40px 20px;
+  color: #333;
 }
 
 .container {
-  max-width: 600px;
+  max-width: 700px;
   margin: auto;
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+.container:hover {
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
 }
 
 input[type="text"] {
   width: 100%;
-  padding: 10px;
-  margin-bottom: 10px;
+  padding: 12px 14px;
   font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus {
+  border-color: #007BFF;
+  outline: none;
 }
 
 #suggestions {
@@ -30,29 +47,46 @@ input[type="text"] {
   overflow-y: auto;
   background: white;
   display: none;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
 }
 
 #suggestions li {
-  padding: 10px;
+  padding: 10px 14px;
   cursor: pointer;
+  transition: background 0.2s;
 }
 
 #suggestions li:hover {
-  background-color: #f0f0f0;
+  background-color: #f1f5f9;
 }
 
 #teacherInfo {
-  margin-top: 20px;
+  margin-top: 30px;
 }
 
 .schedule-table {
   width: 100%;
   border-collapse: collapse;
+  margin-top: 20px;
 }
 
 .schedule-table th,
 .schedule-table td {
-  border: 1px solid #ccc;
-  padding: 8px;
+  border: 1px solid #dee2e6;
+  padding: 12px 14px;
   text-align: left;
+}
+
+.schedule-table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+}
+
+.schedule-table tr:nth-child(even) {
+  background-color: #f6f8fa;
+}
+
+.schedule-table tr:hover {
+  background-color: #eef2f7;
 }
