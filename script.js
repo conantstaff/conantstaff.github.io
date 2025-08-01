@@ -56,4 +56,40 @@ function displayTeacherInfo(teacher) {
       </table>
     `}
   `;
+
+    const relatedCoursesHTML = sortedSchedule.map(classItem => {
+    const others = findOtherTeachers(classItem.courseName, teacher);
+    if (others.length === 0) return ''; // Skip if no other teachers found
+
+    const othersList = others.map(other => `
+      <li class="related-teacher" data-name="${other.name}">
+        ${other.name} (${other.department})
+      </li>
+    `).join('');
+
+    return `
+      <div class="related-course-block">
+        <h4>Other teachers for: ${classItem.courseName}</h4>
+        <ul>${othersList}</ul>
+      </div>
+    `;
+  }).join('');
+
+  teacherInfo.innerHTML += relatedCoursesHTML;
+
+  // Add click listeners to related teachers
+  document.querySelectorAll('.related-teacher').forEach(el => {
+    el.addEventListener('click', () => {
+      const selectedName = el.getAttribute('data-name');
+      const selected = teachers.find(t => t.name === selectedName);
+      if (selected) displayTeacherInfo(selected);
+    });
+  });
+}
+
+function findOtherTeachers(courseName, currentTeacher) {
+  return teachers.filter(t => 
+    t.name !== currentTeacher.name &&
+    t.schedule.some(c => c.courseName === courseName)
+  );
 }
