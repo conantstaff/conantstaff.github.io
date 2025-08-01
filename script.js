@@ -66,45 +66,45 @@ function displayTeacherInfo(teacher) {
     }
   `;
 
-// Keep track of courseNames we’ve already handled
-const handledCourses = new Set();
+  // Keep track of courseNames we’ve already handled
+  const handledCourses = new Set();
 
-const relatedCoursesHTML = sortedSchedule
-  .filter(classItem => {
-    const normalizedCourse = classItem.courseName.trim().toLowerCase();
-    if (handledCourses.has(normalizedCourse)) return false;
-    handledCourses.add(normalizedCourse);
-    return true;
-  })
-  .map((classItem) => {
-    const others = findOtherTeachers(classItem.courseName, teacher);
-if (others.length === 0) {
-  return `
-    <div class="related-course-block">
-      <h4>Other teachers for: ${classItem.courseName}</h4>
-      <p class="no-related">No other teachers currently teach this course.</p>
-    </div>
-  `;
-}
-    
-    const othersList = others
-      .map(
-        (other) => `
-      <li class="related-teacher" data-name="${other.name}">
-        ${other.name} (${other.department})
-      </li>
-    `
-      )
-      .join('');
+  const relatedCoursesHTML = sortedSchedule
+    .filter(classItem => {
+      const normalizedCourse = classItem.courseName.trim().toLowerCase();
+      if (handledCourses.has(normalizedCourse)) return false;
+      handledCourses.add(normalizedCourse);
+      return true;
+    })
+    .map((classItem) => {
+      const others = findOtherTeachers(classItem.courseName, teacher);
+      if (others.length === 0) {
+        return `
+          <div class="related-course-block">
+            <h4>Other teachers for: ${classItem.courseName}</h4>
+            <p class="no-related">No other teachers currently teach this course.</p>
+          </div>
+        `;
+      }
 
-    return `
-    <div class="related-course-block">
-      <h4>Other teachers for: ${classItem.courseName}</h4>
-      <ul>${othersList}</ul>
-    </div>
-  `;
-  })
-  .join('');
+      const othersList = others
+        .map(
+          (other) => `
+        <li class="related-teacher" data-name="${other.name}">
+          ${other.name} (${other.department})
+        </li>
+      `
+        )
+        .join('');
+
+      return `
+      <div class="related-course-block">
+        <h4>Other teachers for: ${classItem.courseName}</h4>
+        <ul>${othersList}</ul>
+      </div>
+    `;
+    })
+    .join('');
 
   teacherInfo.innerHTML += relatedCoursesHTML;
 
@@ -113,7 +113,14 @@ if (others.length === 0) {
     el.addEventListener('click', () => {
       const selectedName = el.getAttribute('data-name');
       const selected = teachers.find((t) => t.name === selectedName);
-      if (selected) displayTeacherInfo(selected);
+      if (selected) {
+        // Update search input and display that teacher
+        searchInput.value = selected.name;
+        displayTeacherInfo(selected);
+
+        // Smooth scroll to teacher info section
+        teacherInfo.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     });
   });
 }
