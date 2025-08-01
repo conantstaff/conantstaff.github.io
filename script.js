@@ -4,6 +4,7 @@ const searchInput = document.getElementById('teacherSearch');
 const suggestionsList = document.getElementById('suggestions');
 const teacherInfo = document.getElementById('teacherInfo');
 
+// Live search and autocomplete
 searchInput.addEventListener('input', function () {
   const query = this.value.toLowerCase();
   suggestionsList.innerHTML = '';
@@ -31,65 +32,82 @@ searchInput.addEventListener('input', function () {
   suggestionsList.style.display = matches.length ? 'block' : 'none';
 });
 
+// Main function to display selected teacher info
 function displayTeacherInfo(teacher) {
-  // Sort schedule by period number (ascending)
   const sortedSchedule = teacher.schedule.sort((a, b) => a.period - b.period);
 
   teacherInfo.innerHTML = `
     <h2>${teacher.name}</h2>
     <p><strong>Email:</strong> <a href="mailto:${teacher.email}">${teacher.email}</a></p>
     <h3>Class Schedule:</h3>
-    ${sortedSchedule.length === 0 ? '<p>No classes assigned.</p>' : `
+    ${
+      sortedSchedule.length === 0
+        ? '<p>No classes assigned.</p>'
+        : `
       <table class="schedule-table">
         <tr>
           <th>Period</th>
           <th>Course Name</th>
           <th>Room</th>
         </tr>
-        ${sortedSchedule.map(classItem => `
+        ${sortedSchedule
+          .map(
+            (classItem) => `
           <tr>
             <td>${classItem.period}</td>
             <td>${classItem.courseName}</td>
             <td>${classItem.classLoc}</td>
           </tr>
-        `).join('')}
+        `
+          )
+          .join('')}
       </table>
-    `}
+    `
+    }
   `;
 
-    const relatedCoursesHTML = sortedSchedule.map(classItem => {
-    const others = findOtherTeachers(classItem.courseName, teacher);
-    if (others.length === 0) return ''; // Skip if no other teachers found
+  // Generate related teacher section
+  const relatedCoursesHTML = sortedSchedule
+    .map((classItem) => {
+      const others = findOtherTeachers(classItem.courseName, teacher);
+      if (others.length === 0) return ''; // No related teachers
 
-    const othersList = others.map(other => `
-      <li class="related-teacher" data-name="${other.name}">
-        ${other.name} (${other.department})
-      </li>
-    `).join('');
+      const othersList = others
+        .map(
+          (other) => `
+        <li class="related-teacher" data-name="${other.name}">
+          ${other.name} (${other.department})
+        </li>
+      `
+        )
+        .join('');
 
-    return `
+      return `
       <div class="related-course-block">
         <h4>Other teachers for: ${classItem.courseName}</h4>
         <ul>${othersList}</ul>
       </div>
     `;
-  }).join('');
+    })
+    .join('');
 
   teacherInfo.innerHTML += relatedCoursesHTML;
 
-  // Add click listeners to related teachers
-  document.querySelectorAll('.related-teacher').forEach(el => {
+  // Add event listeners for related teacher links
+  document.querySelectorAll('.related-teacher').forEach((el) => {
     el.addEventListener('click', () => {
       const selectedName = el.getAttribute('data-name');
-      const selected = teachers.find(t => t.name === selectedName);
+      const selected = teachers.find((t) => t.name === selectedName);
       if (selected) displayTeacherInfo(selected);
     });
   });
 }
 
+// Helper to find other teachers for the same course
 function findOtherTeachers(courseName, currentTeacher) {
-  return teachers.filter(t => 
-    t.name !== currentTeacher.name &&
-    t.schedule.some(c => c.courseName === courseName)
+  return teachers.filter(
+    (t) =>
+      t.name !== currentTeacher.name &&
+      t.schedule.some((c) => c.courseName === courseName)
   );
 }
