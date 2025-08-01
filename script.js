@@ -4,7 +4,6 @@ const searchInput = document.getElementById('teacherSearch');
 const suggestionsList = document.getElementById('suggestions');
 const teacherInfo = document.getElementById('teacherInfo');
 
-// Live search and autocomplete
 searchInput.addEventListener('input', function () {
   const query = this.value.toLowerCase();
   suggestionsList.innerHTML = '';
@@ -32,7 +31,6 @@ searchInput.addEventListener('input', function () {
   suggestionsList.style.display = matches.length ? 'block' : 'none';
 });
 
-// Main function to display selected teacher info
 function displayTeacherInfo(teacher) {
   const sortedSchedule = teacher.schedule.sort((a, b) => a.period - b.period);
 
@@ -66,7 +64,6 @@ function displayTeacherInfo(teacher) {
     }
   `;
 
-  // Keep track of courseNames we’ve already handled
   const handledCourses = new Set();
 
   const relatedCoursesHTML = sortedSchedule
@@ -108,28 +105,37 @@ function displayTeacherInfo(teacher) {
 
   teacherInfo.innerHTML += relatedCoursesHTML;
 
-  // Add event listeners for related teacher links
   document.querySelectorAll('.related-teacher').forEach((el) => {
     el.addEventListener('click', () => {
       const selectedName = el.getAttribute('data-name');
       const selected = teachers.find((t) => t.name === selectedName);
       if (selected) {
-        // Update search input and display that teacher
         searchInput.value = selected.name;
         displayTeacherInfo(selected);
 
-        // Smooth scroll to teacher info section
         teacherInfo.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     });
   });
 }
 
-// Helper to find other teachers for the same course
 function findOtherTeachers(courseName, currentTeacher) {
+  const excludeCourses = ["seminar", "study hall"];
+  const normalizedCourseName = courseName.trim().toLowerCase();
+
+  if (excludeCourses.includes(normalizedCourseName)) {
+    return [];
+  }
+
   return teachers.filter(
     (t) =>
       t.name !== currentTeacher.name &&
-      t.schedule.some((c) => c.courseName === courseName)
+      t.schedule.some((c) => {
+        const cName = c.courseName.trim().toLowerCase();
+        return (
+          cName === normalizedCourseName &&
+          !excludeCourses.includes(cName)
+        );
+      })
   );
 }
