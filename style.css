@@ -37,8 +37,20 @@ h1 {
   margin-bottom: 20px;
 }
 
+.search-bar-container {
+  position: sticky;
+  top: 0;
+  background-color: var(--white);
+  padding: 16px 0;
+  z-index: 10;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  border-bottom: 1px solid var(--gray-border);
+}
+
 input[type="text"] {
-  width: 100%;
+  flex: 1;
   padding: 12px 14px;
   font-size: 16px;
   border: 2px solid #ccc;
@@ -49,6 +61,22 @@ input[type="text"] {
 input[type="text"]:focus {
   border-color: var(--blue);
   outline: none;
+}
+
+/* Clear button */
+#clearSearch {
+  padding: 10px 16px;
+  background-color: var(--red);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+#clearSearch:hover {
+  background-color: #b30027;
 }
 
 #suggestions {
