@@ -78,8 +78,15 @@ const relatedCoursesHTML = sortedSchedule
   })
   .map((classItem) => {
     const others = findOtherTeachers(classItem.courseName, teacher);
-    if (others.length === 0) return '';
-
+    if (others.length === 0) {
+  return `
+    <div class="related-course-block">
+      <h4>Other teachers for: ${classItem.courseName}</h4>
+      <p class="no-related">No other teachers currently teach this course.</p>
+    </div>
+  `;
+}
+    
     const othersList = others
       .map(
         (other) => `
