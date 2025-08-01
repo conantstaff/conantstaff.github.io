@@ -66,30 +66,37 @@ function displayTeacherInfo(teacher) {
     }
   `;
 
-  // Generate related teacher section
-  const relatedCoursesHTML = sortedSchedule
-    .map((classItem) => {
-      const others = findOtherTeachers(classItem.courseName, teacher);
-      if (others.length === 0) return ''; // No related teachers
+  // Keep track of courseNames we’ve already handled
+const handledCourses = new Set();
 
-      const othersList = others
-        .map(
-          (other) => `
-        <li class="related-teacher" data-name="${other.name}">
-          ${other.name} (${other.department})
-        </li>
-      `
-        )
-        .join('');
+const relatedCoursesHTML = sortedSchedule
+  .filter(classItem => {
+    if (handledCourses.has(classItem.courseName)) return false;
+    handledCourses.add(classItem.courseName);
+    return true;
+  })
+  .map((classItem) => {
+    const others = findOtherTeachers(classItem.courseName, teacher);
+    if (others.length === 0) return '';
 
-      return `
-      <div class="related-course-block">
-        <h4>Other teachers for: ${classItem.courseName}</h4>
-        <ul>${othersList}</ul>
-      </div>
-    `;
-    })
-    .join('');
+    const othersList = others
+      .map(
+        (other) => `
+      <li class="related-teacher" data-name="${other.name}">
+        ${other.name} (${other.department})
+      </li>
+    `
+      )
+      .join('');
+
+    return `
+    <div class="related-course-block">
+      <h4>Other teachers for: ${classItem.courseName}</h4>
+      <ul>${othersList}</ul>
+    </div>
+  `;
+  })
+  .join('');
 
   teacherInfo.innerHTML += relatedCoursesHTML;
 
