@@ -77,7 +77,7 @@ function displayTeacherInfo(teacher) {
     .map((classItem) => {
       const normalizedCourse = classItem.courseName.trim().toLowerCase();
       if (excludedCourses.includes(normalizedCourse)) {
-        return ''; // skip displaying box entirely
+        return '';
       }
 
       const others = findOtherTeachers(classItem.courseName, teacher);
