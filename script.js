@@ -66,13 +66,14 @@ function displayTeacherInfo(teacher) {
     }
   `;
 
-  // Keep track of courseNames we’ve already handled
+// Keep track of courseNames we’ve already handled
 const handledCourses = new Set();
 
 const relatedCoursesHTML = sortedSchedule
   .filter(classItem => {
-    if (handledCourses.has(classItem.courseName)) return false;
-    handledCourses.add(classItem.courseName);
+    const normalizedCourse = classItem.courseName.trim().toLowerCase();
+    if (handledCourses.has(normalizedCourse)) return false;
+    handledCourses.add(normalizedCourse);
     return true;
   })
   .map((classItem) => {
