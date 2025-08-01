@@ -6,4 +6,4 @@ A simple website to help students search for teacher names and view their subjec
 🌐 Hosted with GitHub Pages
 
 To use the site, just start typing a teacher's name and select from the suggestions.
-Created by Akshay Kalra
+  Created by Akshay Kalra
