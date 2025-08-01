@@ -77,11 +77,10 @@ function displayTeacherInfo(teacher) {
     .map((classItem) => {
       const normalizedCourse = classItem.courseName.trim().toLowerCase();
       if (excludedCourses.includes(normalizedCourse)) {
-        return ''; // Don't render anything
+        return ''; // skip displaying box entirely
       }
 
       const others = findOtherTeachers(classItem.courseName, teacher);
-      if (others.length === 0) return '';
 
       const othersList = others
         .map(
@@ -96,7 +95,11 @@ function displayTeacherInfo(teacher) {
       return `
       <div class="related-course-block">
         <h4>Other teachers for: ${classItem.courseName}</h4>
-        <ul>${othersList}</ul>
+        ${
+          others.length === 0
+            ? `<p class="no-related">No other teachers currently teach this course.</p>`
+            : `<ul>${othersList}</ul>`
+        }
       </div>
     `;
     })
