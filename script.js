@@ -1,9 +1,21 @@
 console.log('Teachers array:', teachers);
 
 const searchInput = document.getElementById('teacherSearch');
+const clearBtn = document.getElementById('clearSearch');
+const departmentFilter = document.getElementById('departmentFilter');
 const suggestionsList = document.getElementById('suggestions');
 const teacherInfo = document.getElementById('teacherInfo');
 
+// Event: Clear button clears input, department filter, and resets list/display
+clearBtn.addEventListener('click', () => {
+  searchInput.value = '';
+  if (departmentFilter) departmentFilter.value = '';
+  suggestionsList.innerHTML = '';
+  suggestionsList.style.display = 'none';
+  teacherInfo.innerHTML = '';
+});
+
+// Event: Live search input with autocomplete, filtered by department if selected
 searchInput.addEventListener('input', function () {
   const query = this.value.toLowerCase();
   suggestionsList.innerHTML = '';
@@ -13,11 +25,17 @@ searchInput.addEventListener('input', function () {
     return;
   }
 
-  const matches = teachers.filter(t =>
+  let filteredTeachers = teachers.filter(t =>
     t.name.toLowerCase().includes(query)
   );
 
-  matches.forEach(teacher => {
+  // Filter by department if set
+  if (departmentFilter && departmentFilter.value) {
+    const dept = departmentFilter.value.toLowerCase();
+    filteredTeachers = filteredTeachers.filter(t => t.department.toLowerCase() === dept);
+  }
+
+  filteredTeachers.forEach(teacher => {
     const li = document.createElement('li');
     li.textContent = teacher.name;
     li.addEventListener('click', () => {
@@ -28,8 +46,15 @@ searchInput.addEventListener('input', function () {
     suggestionsList.appendChild(li);
   });
 
-  suggestionsList.style.display = matches.length ? 'block' : 'none';
+  suggestionsList.style.display = filteredTeachers.length ? 'block' : 'none';
 });
+
+// Optionally, handle department filter change to update suggestions (optional UX improvement)
+if (departmentFilter) {
+  departmentFilter.addEventListener('change', () => {
+    searchInput.dispatchEvent(new Event('input')); // Re-trigger search input event
+  });
+}
 
 function displayTeacherInfo(teacher) {
   const sortedSchedule = teacher.schedule.sort((a, b) => a.period - b.period);
@@ -107,6 +132,7 @@ function displayTeacherInfo(teacher) {
 
   teacherInfo.innerHTML += relatedCoursesHTML;
 
+  // Add click event for related teacher names
   document.querySelectorAll('.related-teacher').forEach((el) => {
     el.addEventListener('click', () => {
       const selectedName = el.getAttribute('data-name');
