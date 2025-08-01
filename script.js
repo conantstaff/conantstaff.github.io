@@ -65,6 +65,7 @@ function displayTeacherInfo(teacher) {
   `;
 
   const handledCourses = new Set();
+  const excludedCourses = ["seminar", "study hall"];
 
   const relatedCoursesHTML = sortedSchedule
     .filter(classItem => {
@@ -74,15 +75,13 @@ function displayTeacherInfo(teacher) {
       return true;
     })
     .map((classItem) => {
-      const others = findOtherTeachers(classItem.courseName, teacher);
-      if (others.length === 0) {
-        return `
-          <div class="related-course-block">
-            <h4>Other teachers for: ${classItem.courseName}</h4>
-            <p class="no-related">No other teachers currently teach this course.</p>
-          </div>
-        `;
+      const normalizedCourse = classItem.courseName.trim().toLowerCase();
+      if (excludedCourses.includes(normalizedCourse)) {
+        return ''; // Don't render anything
       }
+
+      const others = findOtherTeachers(classItem.courseName, teacher);
+      if (others.length === 0) return '';
 
       const othersList = others
         .map(
@@ -112,7 +111,6 @@ function displayTeacherInfo(teacher) {
       if (selected) {
         searchInput.value = selected.name;
         displayTeacherInfo(selected);
-
         teacherInfo.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     });
