@@ -4,8 +4,9 @@ const searchInput = document.getElementById('teacherSearch');
 const suggestionsList = document.getElementById('suggestions');
 const teacherInfo = document.getElementById('teacherInfo');
 
+// --- Search + Autocomplete ---
 searchInput.addEventListener('input', function () {
-  const query = this.value.toLowerCase();
+  const query = this.value.toLowerCase().trim();
   suggestionsList.innerHTML = '';
 
   if (query.length < 2) {
@@ -13,8 +14,9 @@ searchInput.addEventListener('input', function () {
     return;
   }
 
+  // Match against teacher.name (new format)
   const matches = teachers.filter(t =>
-    t.name.toLowerCase().includes(query)
+    t.name && t.name.toLowerCase().includes(query)
   );
 
   matches.forEach(teacher => {
@@ -31,8 +33,11 @@ searchInput.addEventListener('input', function () {
   suggestionsList.style.display = matches.length ? 'block' : 'none';
 });
 
+// --- Display Teacher Info ---
 function displayTeacherInfo(teacher) {
-  const sortedSchedule = teacher.schedule.sort((a, b) => a.period - b.period);
+  const sortedSchedule = teacher.schedule
+    ? teacher.schedule.slice().sort((a, b) => a.period - b.period)
+    : [];
 
   teacherInfo.innerHTML = `
     <h2>${teacher.name}</h2>
@@ -64,6 +69,7 @@ function displayTeacherInfo(teacher) {
     }
   `;
 
+  // --- Related Teachers Section ---
   const handledCourses = new Set();
   const excludedCourses = ["seminar", "study hall"];
 
@@ -107,6 +113,7 @@ function displayTeacherInfo(teacher) {
 
   teacherInfo.innerHTML += relatedCoursesHTML;
 
+  // Allow clicking on related teachers
   document.querySelectorAll('.related-teacher').forEach((el) => {
     el.addEventListener('click', () => {
       const selectedName = el.getAttribute('data-name');
@@ -120,6 +127,7 @@ function displayTeacherInfo(teacher) {
   });
 }
 
+// --- Helper: Find Other Teachers for Same Course ---
 function findOtherTeachers(courseName, currentTeacher) {
   const excludeCourses = ["seminar", "study hall"];
   const normalizedCourseName = courseName.trim().toLowerCase();
@@ -131,6 +139,7 @@ function findOtherTeachers(courseName, currentTeacher) {
   return teachers.filter(
     (t) =>
       t.name !== currentTeacher.name &&
+      Array.isArray(t.schedule) &&
       t.schedule.some((c) => {
         const cName = c.courseName.trim().toLowerCase();
         return (
