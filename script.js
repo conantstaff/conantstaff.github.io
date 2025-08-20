@@ -4,9 +4,8 @@ const searchInput = document.getElementById('teacherSearch');
 const suggestionsList = document.getElementById('suggestions');
 const teacherInfo = document.getElementById('teacherInfo');
 
-// --- Search + Autocomplete ---
 searchInput.addEventListener('input', function () {
-  const query = this.value.toLowerCase().trim();
+  const query = this.value.toLowerCase();
   suggestionsList.innerHTML = '';
 
   if (query.length < 2) {
@@ -14,9 +13,8 @@ searchInput.addEventListener('input', function () {
     return;
   }
 
-  // Match against teacher.name (new format)
   const matches = teachers.filter(t =>
-    t.name && t.name.toLowerCase().includes(query)
+    t.name.toLowerCase().includes(query)
   );
 
   matches.forEach(teacher => {
@@ -33,13 +31,14 @@ searchInput.addEventListener('input', function () {
   suggestionsList.style.display = matches.length ? 'block' : 'none';
 });
 
-// --- Display Teacher Info ---
 function displayTeacherInfo(teacher) {
-  const sortedSchedule = teacher.schedule
-    ? teacher.schedule.slice().sort((a, b) => a.period - b.period)
-    : [];
+  const sortedSchedule = teacher.schedule.sort((a, b) => a.period - b.period);
 
-  teacherInfo.innerHTML = `
+  // Clear previous content
+  teacherInfo.innerHTML = '';
+
+  // Build main teacher info block
+  let html = `
     <h2>${teacher.name}</h2>
     <p><strong>Email:</strong> <a href="mailto:${teacher.email}">${teacher.email}</a></p>
     <h3>Class Schedule:</h3>
@@ -69,7 +68,7 @@ function displayTeacherInfo(teacher) {
     }
   `;
 
-  // --- Related Teachers Section ---
+  // Build related courses section
   const handledCourses = new Set();
   const excludedCourses = ["seminar", "study hall"];
 
@@ -91,29 +90,30 @@ function displayTeacherInfo(teacher) {
       const othersList = others
         .map(
           (other) => `
-        <li class="related-teacher" data-name="${other.name}">
-          ${other.name} (${other.department})
-        </li>
-      `
+            <li class="related-teacher" data-name="${other.name}">
+              ${other.name} (${other.department})
+            </li>
+          `
         )
         .join('');
 
       return `
-      <div class="related-course-block">
-        <h4>Other teachers for: ${classItem.courseName}</h4>
-        ${
-          others.length === 0
-            ? `<p class="no-related">No other teachers currently teach this course.</p>`
-            : `<ul>${othersList}</ul>`
-        }
-      </div>
-    `;
+        <div class="related-course-block">
+          <h4>Other teachers for: ${classItem.courseName}</h4>
+          ${
+            others.length === 0
+              ? `<p class="no-related">No other teachers currently teach this course.</p>`
+              : `<ul>${othersList}</ul>`
+          }
+        </div>
+      `;
     })
     .join('');
 
-  teacherInfo.innerHTML += relatedCoursesHTML;
+  html += relatedCoursesHTML;
+  teacherInfo.innerHTML = html;
 
-  // Allow clicking on related teachers
+  // Add click events to related teachers
   document.querySelectorAll('.related-teacher').forEach((el) => {
     el.addEventListener('click', () => {
       const selectedName = el.getAttribute('data-name');
@@ -127,7 +127,6 @@ function displayTeacherInfo(teacher) {
   });
 }
 
-// --- Helper: Find Other Teachers for Same Course ---
 function findOtherTeachers(courseName, currentTeacher) {
   const excludeCourses = ["seminar", "study hall"];
   const normalizedCourseName = courseName.trim().toLowerCase();
@@ -139,7 +138,6 @@ function findOtherTeachers(courseName, currentTeacher) {
   return teachers.filter(
     (t) =>
       t.name !== currentTeacher.name &&
-      Array.isArray(t.schedule) &&
       t.schedule.some((c) => {
         const cName = c.courseName.trim().toLowerCase();
         return (
