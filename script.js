@@ -114,7 +114,7 @@ function displayTeacherInfo(teacher) {
 }
 
 function findOtherTeachers(courseName, currentTeacher) {
-  const excludeCourses = ["seminar", "study hall, advisory/lunch"];
+  const excludeCourses = ["seminar", "study hall", "advisory/lunch"];
   const normalizedCourseName = courseName.trim().toLowerCase();
 
   if (excludeCourses.includes(normalizedCourseName)) {
