@@ -2,36 +2,21 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Conant Tutoring Board</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Teacher Schedule Lookup</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <header>
-    <h1>Conant Tutoring Board</h1>
-    <p>Live updates from the tutoring schedule</p>
-    <button id="refreshBtn">🔄 Refresh</button>
-  </header>
+  <div class="container">
+    <h1>Find a Teacher's Schedule</h1>
+    <input type="text" id="teacherSearch" placeholder="Start typing a teacher's name..." autocomplete="off" />
+    <ul id="suggestions"></ul>
+    <div id="teacherInfo"></div>
+  </div>
 
-  <main>
-    <section id="boardContainer">
-      <p class="loading">Loading tutoring board...</p>
-    </section>
-
-    <section id="requestSection">
-      <h2>Request Tutoring</h2>
-      <p>Submit a request using the form below.</p>
-      <!-- Replace with your real Google Form embed link -->
-      <iframe 
-        src="https://docs.google.com/forms/d/e/YOUR_FORM_ID/viewform?embedded=true"
-        width="100%" height="500" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
-    </section>
-  </main>
-
-  <footer>
-    <p>Conant Peer Tutoring · Built for students, by students</p>
-  </footer>
-
+  <!-- Link the teachers data first -->
+  <script src="teachers.js"></script>
+  <!-- Then the main script that uses it -->
   <script src="script.js"></script>
 </body>
 </html>
