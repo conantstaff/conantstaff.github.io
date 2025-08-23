@@ -1,85 +1,151 @@
-/* General reset */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+:root {
+  --blue: #0033A0;
+  --red: #D50032;
+  --light-bg: #eef2f7;
+  --white: #ffffff;
+  --gray-border: #dee2e6;
+  --highlight-bg: #f9fafb;
 }
 
 body {
-  font-family: Arial, sans-serif;
-  background: #f7f9fc;
-  color: #222;
-  line-height: 1.6;
-  padding: 1rem;
+  font-family: 'Inter', sans-serif;
+  background-color: var(--light-bg);
+  margin: 0;
+  padding: 40px 20px;
+  color: #333;
 }
 
-header {
-  text-align: center;
-  margin-bottom: 2rem;
+.container {
+  max-width: 700px;
+  margin: auto;
+  background: var(--white);
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
 }
 
-header h1 {
-  font-size: 2rem;
-  margin-bottom: 0.3rem;
+.container:hover {
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
 }
 
-#refreshBtn {
-  margin-top: 0.5rem;
-  padding: 0.4rem 0.8rem;
-  border: none;
-  border-radius: 8px;
-  background: #0055cc;
-  color: white;
-  cursor: pointer;
+h1 {
+  font-size: 28px;
+  color: var(--blue);
+  margin-bottom: 20px;
 }
 
-#refreshBtn:hover {
-  background: #0040a0;
-}
-
-#boardContainer {
-  overflow-x: auto;
-  margin-bottom: 2rem;
-}
-
-table {
-  border-collapse: collapse;
+input[type="text"] {
   width: 100%;
-  margin-bottom: 1rem;
+  padding: 12px 14px;
+  font-size: 16px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  transition: border-color 0.3s ease;
 }
 
-thead {
-  background: #0055cc;
+input[type="text"]:focus {
+  border-color: var(--blue);
+  outline: none;
+}
+
+#suggestions {
+  list-style: none;
+  padding: 0;
+  margin-top: 0;
+  border: 1px solid #ccc;
+  border-top: none;
+  max-height: 200px;
+  overflow-y: auto;
+  background: var(--white);
+  display: none;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+#suggestions li {
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+#suggestions li:hover {
+  background-color: #f1f5f9;
+}
+
+#teacherInfo {
+  margin-top: 30px;
+}
+
+.schedule-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  border: 1px solid var(--gray-border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.schedule-table th,
+.schedule-table td {
+  border: 1px solid var(--gray-border);
+  padding: 12px 14px;
+  text-align: left;
+}
+
+.schedule-table th {
+  background-color: var(--blue);
   color: white;
+  font-weight: 600;
 }
 
-th, td {
-  border: 1px solid #ddd;
-  padding: 0.6rem;
-  text-align: center;
+.schedule-table tr:nth-child(even) {
+  background-color: #f6f8fa;
 }
 
-tr:nth-child(even) {
-  background: #f2f2f2;
+.schedule-table tr:hover {
+  background-color: var(--highlight-bg);
 }
 
-.highlight {
-  background-color: #ffedcc !important;
+.related-course-block {
+  margin-top: 30px;
+  background-color: var(--highlight-bg);
+  padding: 16px;
+  border-left: 4px solid var(--red);
+  border-radius: 8px;
 }
 
-.error {
-  color: red;
-  text-align: center;
+.related-course-block h4 {
+  margin: 0 0 8px;
+  font-size: 16px;
+  color: var(--red);
 }
 
-.loading {
-  text-align: center;
-  font-style: italic;
+.related-course-block ul {
+  list-style-type: none;
+  padding-left: 0;
+  margin: 0;
 }
 
-footer {
-  text-align: center;
-  margin-top: 2rem;
-  font-size: 0.9rem;
-  color: #666;
+.related-course-block li {
+  cursor: pointer;
+  padding: 6px 0;
+  color: #333;
+  transition: color 0.2s;
+}
+
+.related-course-block li:hover {
+  color: var(--blue);
+  text-decoration: underline;
+}
+
+a {
+  color: var(--blue);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
 }
