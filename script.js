@@ -137,9 +137,9 @@ function findOtherTeachers(courseName, currentTeacher) {
 // ---------------- New: Tutoring Board Module ----------------
 
 const CONFIG = {
-  SHEET_URL: "{{SHEET_PUBLIC_URL}}", // keep as string placeholder
-  REQUEST_THRESHOLD: parseInt("{{REQUEST_THRESHOLD}}", 10) || 3, // safe default
-  POLL_MS: parseInt("{{POLL_MS}}", 10) || 60000,                // safe default
+  SHEET_URL: "https://docs.google.com/spreadsheets/d/e/2PACX-1vRIdrYo9i51OFMSbB3s9joeMyfWy_T8RxdfKh2N1VpFagbMCXMKQXmXdd-xFuBluqGDvDlDM3QVpXNr/pub?gid=1156243365&single=true&output=csv", // keep as string placeholder
+  REQUEST_THRESHOLD: 3,
+  POLL_MS: 60000,
   SUBJECTS: ["Math", "Reading", "Science"],
   PERIODS: [1,2,3,4,5,6,7,8]
 };
