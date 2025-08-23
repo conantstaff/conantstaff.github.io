@@ -137,9 +137,9 @@ function findOtherTeachers(courseName, currentTeacher) {
 // ---------------- New: Tutoring Board Module ----------------
 
 const CONFIG = {
-  SHEET_URL: "{{SHEET_PUBLIC_URL}}", // Published CSV/JSON; PII-free
-  REQUEST_THRESHOLD: {{REQUEST_THRESHOLD}}, // e.g., 3
-  POLL_MS: {{POLL_MS}}, // e.g., 60000 (set 0 to disable)
+  SHEET_URL: "{{SHEET_PUBLIC_URL}}", // keep as string placeholder
+  REQUEST_THRESHOLD: parseInt("{{REQUEST_THRESHOLD}}", 10) || 3, // safe default
+  POLL_MS: parseInt("{{POLL_MS}}", 10) || 60000,                // safe default
   SUBJECTS: ["Math", "Reading", "Science"],
   PERIODS: [1,2,3,4,5,6,7,8]
 };
@@ -153,6 +153,10 @@ const CONFIG = {
   const refreshBtn = document.getElementById('refreshBoard');
   const statusLive = document.getElementById('boardStatus');
   const tsEl = document.getElementById('boardTimestamp');
+
+  function isConfiguredUrl(u) {
+  return /^https?:\/\//.test(u) && !u.includes("{{");
+}
 
   let pollTimer = null;
 
@@ -313,24 +317,33 @@ const CONFIG = {
     if (statusLive) statusLive.textContent = 'Tutoring board updated.';
   }
 
-  async function loadBoard() {
-    setLoading(true);
-    setError(false);
-    try {
-      const url = CONFIG.SHEET_URL + (CONFIG.SHEET_URL.includes('?') ? '&' : '?') + 't=' + Date.now();
-      const resp = await fetch(url, { cache: 'no-store' });
-      const text = await resp.text();
-      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-      const rowsRaw = parseInput(text, resp.headers.get('Content-Type') || '');
-      const rows = normalizeRows(rowsRaw);
-      const map = buildMap(rows);
-      render(map, rows);
-    } catch (err) {
-      setError(true, String(err), (err && err.stack) ? err.stack : '');
-    } finally {
-      setLoading(false);
+async function loadBoard() {
+  setLoading(true);
+  setError(false);
+  try {
+    if (!isConfiguredUrl(CONFIG.SHEET_URL)) {
+      // Show a friendly message instead of throwing
+      boardEl.innerHTML = '<p style="margin:12px;color:#6b7280;">Connect your Google Sheet to display the tutoring board (set <code>CONFIG.SHEET_URL</code> in <code>script.js</code>).</p>';
+      if (tsEl) tsEl.textContent = '';
+      return;
     }
+
+    const url = CONFIG.SHEET_URL + (CONFIG.SHEET_URL.includes('?') ? '&' : '?') + 't=' + Date.now();
+    const resp = await fetch(url, { cache: 'no-store' });
+    const text = await resp.text();
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+
+    const rowsRaw = parseInput(text, resp.headers.get('Content-Type') || '');
+    const rows = normalizeRows(rowsRaw);
+    const map = buildMap(rows);
+    render(map, rows);
+
+  } catch (err) {
+    setError(true, String(err), (err && err.stack) ? err.stack : '');
+  } finally {
+    setLoading(false);
   }
+}
 
   function startPolling() {
     if (pollTimer) clearInterval(pollTimer);
