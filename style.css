@@ -149,3 +149,59 @@ a {
 a:hover {
   text-decoration: underline;
 }
+
+/* Tutoring Board Styles */
+.board-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px 0 20px;
+}
+
+#refreshBtn {
+  padding: 8px 12px;
+  border: none;
+  background: var(--blue);
+  color: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+}
+#refreshBtn:hover {
+  background: #001f66;
+}
+
+.board-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.board-table th, .board-table td {
+  border: 1px solid var(--gray-border);
+  padding: 10px;
+  text-align: center;
+}
+.board-table th {
+  background: var(--blue);
+  color: white;
+}
+
+.board-table td.available {
+  background-color: #d4edda;
+}
+.board-table td.waiting {
+  background-color: #fff3cd;
+}
+.board-table td.needs-tutor {
+  background-color: #f8d7da;
+}
+
+.error-box {
+  margin-top: 20px;
+  padding: 12px;
+  background: #f8d7da;
+  color: #721c24;
+  border-radius: 6px;
+}
+.form-link {
+  margin-top: 20px;
+}
+
