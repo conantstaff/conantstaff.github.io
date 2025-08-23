@@ -50,7 +50,7 @@ input[type="text"]:focus { border-color: var(--blue); outline: none; }
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
 }
 #suggestions li { padding: 10px 14px; cursor: pointer; transition: background 0.2s; }
-#suggestions li:hover { background-color: #f1f5g9; }
+#suggestions li:hover { background-color: #f1f5f9; }
 
 #teacherInfo { margin-top: 30px; }
 
