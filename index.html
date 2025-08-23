@@ -14,6 +14,40 @@
     <div id="teacherInfo"></div>
   </div>
 
+  <!-- Tutoring Availability Board (new) -->
+  <div class="container tutoring-container" aria-labelledby="tutoring-title">
+    <div class="tutoring-header">
+      <h1 id="tutoring-title">Tutoring Availability Board</h1>
+      <div class="tutoring-actions">
+        <a class="btn primary" id="requestLink" href="{{FORM_URL}}" target="_blank" rel="noopener">Request Tutoring</a>
+        <button class="btn" id="refreshBoard" type="button" aria-label="Refresh tutoring board">Refresh</button>
+      </div>
+    </div>
+
+    <p class="tutoring-caption">
+      Anonymous student requests (subject + period) flow into a shared Google Sheet. Tutors mark availability there.
+      This board shows aggregate requests and status per Subject × Period.
+    </p>
+
+    <div id="boardStatus" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+    <div id="tutoringBoardWrapper">
+      <div id="tutoringBoardLoading" role="status" aria-live="polite">Loading tutoring data…</div>
+      <div id="tutoringBoardError" class="board-error" hidden>
+        <p>We couldn’t load the board right now.</p>
+        <button class="btn" id="retryBoard">Try again</button>
+        <details class="diag">
+          <summary>Diagnostics</summary>
+          <pre id="diagnostics"></pre>
+        </details>
+      </div>
+      <div id="tutoring-board" class="board-container" role="table" aria-label="Tutoring availability grid"></div>
+      <div class="board-footer">
+        <span id="boardTimestamp" class="timestamp" aria-live="polite"></span>
+      </div>
+    </div>
+  </div>
+
   <!-- Link the teachers data first -->
   <script src="teachers.js"></script>
   <!-- Then the main script that uses it -->
