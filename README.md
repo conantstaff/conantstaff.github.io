@@ -1,4 +1,4 @@
-A simple website to help students search for teacher names, view their subjects and schedules, and request tutoring from student tutors.
+A simple website to help students search for their teachers, view their classes and schedules, and request tutoring from student tutors.
 📚 See schedules & other teachers
 ✏️ Request tutoring and check who’s available
 🧠 Built with HTML, CSS, and JavaScript
