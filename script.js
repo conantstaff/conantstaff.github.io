@@ -140,7 +140,7 @@ const CONFIG = {
   SHEET_URL: "https://docs.google.com/spreadsheets/d/e/2PACX-1vRIdrYo9i51OFMSbB3s9joeMyfWy_T8RxdfKh2N1VpFagbMCXMKQXmXdd-xFuBluqGDvDlDM3QVpXNr/pub?gid=1156243365&single=true&output=csv", // keep as string placeholder
   REQUEST_THRESHOLD: 3,
   POLL_MS: 60000,
-  SUBJECTS: ["Math", "Reading", "Science"],
+  SUBJECTS: ["Math", "English", "Science"],
   PERIODS: [1,2,3,4,5,6,7,8]
 };
 
