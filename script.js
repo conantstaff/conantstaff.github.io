@@ -1,4 +1,3 @@
-// ---------------- Existing teacher-lookup code (unchanged) ----------------
 console.log('Teachers array:', teachers);
 
 const searchInput = document.getElementById('teacherSearch');
@@ -134,8 +133,6 @@ function findOtherTeachers(courseName, currentTeacher) {
   );
 }
 
-// ---------------- New: Tutoring Board Module ----------------
-
 const CONFIG = {
   SHEET_URL: "https://docs.google.com/spreadsheets/d/e/2PACX-1vRIdrYo9i51OFMSbB3s9joeMyfWy_T8RxdfKh2N1VpFagbMCXMKQXmXdd-xFuBluqGDvDlDM3QVpXNr/pub?gid=1156243365&single=true&output=csv", // keep as string placeholder
   REQUEST_THRESHOLD: 3,
@@ -168,7 +165,6 @@ const CONFIG = {
   }
 
   function csvToRows(text) {
-    // Simple CSV parser (handles quoted fields)
     const rows = [];
     let cur = '', inQ = false, row = [];
     for (let i = 0; i < text.length; i++) {
@@ -190,7 +186,6 @@ const CONFIG = {
     try {
       if (contentType && contentType.includes('application/json')) {
         const json = JSON.parse(text);
-        // Accept array of objects or {data:[...]}
         const arr = Array.isArray(json) ? json : (Array.isArray(json.data) ? json.data : []);
         return arr;
       } else {
@@ -247,7 +242,6 @@ const CONFIG = {
     table.className = 'board-table';
     table.setAttribute('role', 'grid');
 
-    // Header
     const thead = document.createElement('thead');
     const htr = document.createElement('tr');
     const th0 = document.createElement('th');
@@ -263,7 +257,6 @@ const CONFIG = {
     thead.appendChild(htr);
     table.appendChild(thead);
 
-    // Body
     const tbody = document.createElement('tbody');
     CONFIG.SUBJECTS.forEach(sub => {
       const tr = document.createElement('tr');
@@ -306,11 +299,9 @@ const CONFIG = {
     });
     table.appendChild(tbody);
 
-    // Swap into DOM
     boardEl.innerHTML = '';
     boardEl.appendChild(table);
 
-    // Timestamp (use most recent last_updated if present)
     const times = rows.map(r => r.last_updated).filter(Boolean);
     const latest = times.sort().slice(-1)[0] || new Date().toISOString();
     if (tsEl) tsEl.textContent = `Last updated: ${latest}`;
@@ -322,7 +313,6 @@ async function loadBoard() {
   setError(false);
   try {
     if (!isConfiguredUrl(CONFIG.SHEET_URL)) {
-      // Show a friendly message instead of throwing
       boardEl.innerHTML = '<p style="margin:12px;color:#6b7280;">Connect your Google Sheet to display the tutoring board (set <code>CONFIG.SHEET_URL</code> in <code>script.js</code>).</p>';
       if (tsEl) tsEl.textContent = '';
       return;
@@ -351,11 +341,9 @@ async function loadBoard() {
     if (ms > 0) pollTimer = setInterval(loadBoard, ms);
   }
 
-  // Wire up buttons
   if (retryBtn) retryBtn.addEventListener('click', loadBoard);
   if (refreshBtn) refreshBtn.addEventListener('click', loadBoard);
 
-  // Kickoff
   loadBoard();
   startPolling();
 })();
