@@ -134,7 +134,7 @@ function findOtherTeachers(courseName, currentTeacher) {
 }
 
 const CONFIG = {
-  SHEET_URL: "https://docs.google.com/spreadsheets/d/e/2PACX-1vRg8iwQL5O4lVlG3mKMDyAYpMy9904W8FCnrcHLT57Ex_LF24-T0t1Su2ffkje72JCLn-dvazuB42pl/pub?gid=241342173&single=true&output=csv", // keep as string placeholder
+  SHEET_URL: "https://docs.google.com/spreadsheets/d/e/2PACX-1vRg8iwQL5O4lVlG3mKMDyAYpMy9904W8FCnrcHLT57Ex_LF24-T0t1Su2ffkje72JCLn-dvazuB42pl/pubhtml?gid=241342173&single=true", // keep as string placeholder
   REQUEST_THRESHOLD: 3,
   POLL_MS: 60000,
   SUBJECTS: ["Math", "English", "Science"],
