@@ -61,7 +61,7 @@ function displayTeacherInfo(teacher) {
     }`;
 
   const handledCourses = new Set();
-  const excludedCourses = ["seminar", "study hall", "advisory/lunch", "secondary ed experience];
+  const excludedCourses = ["seminar", "study hall", "advisory/lunch", "secondary ed experience"];
 
   const relatedCoursesHTML = sortedSchedule
     .filter(classItem => {
