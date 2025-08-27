@@ -138,7 +138,7 @@ const CONFIG = {
   REQUEST_THRESHOLD: 3,
   POLL_MS: 60000,
   SUBJECTS: ["Math", "English", "Science"],
-  PERIODS: ["Before School",1,2,3,4,5,6,7,8,"After School"]
+  PERIODS: ["Before School","1","2","3","4","5","6","7","8","After School"]
 };
 
 (function TutoringBoard() {
