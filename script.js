@@ -138,7 +138,7 @@ const CONFIG = {
   REQUEST_THRESHOLD: 3,
   POLL_MS: 60000,
   SUBJECTS: ["Math", "English", "Science"],
-  PERIODS: [1,2,3,4,5,6,7,8]
+  PERIODS: [1,2,3,4,5,6,7,8,"Before School","After School"]
 };
 
 (function TutoringBoard() {
@@ -207,15 +207,17 @@ const CONFIG = {
 
   function normalizeRows(rows) {
     const norm = rows.map(r => ({
-      period: Number(String(r.period || '').trim()),
+      period: String(r.period || '').trim(),
       subject: String(r.subject || '').trim(),
       request_count: Number(String(r.request_count || '0').trim()) || 0,
       tutor_available: String(r.tutor_available || 'NO').trim().toUpperCase(),
       last_updated: String(r.last_updated || '').trim()
     })).filter(r =>
-      Number.isFinite(r.period) &&
+      r.period &&
       CONFIG.PERIODS.includes(r.period) &&
       CONFIG.SUBJECTS.includes(r.subject)
+  );
+
     );
     return norm;
   }
@@ -250,7 +252,7 @@ const CONFIG = {
     htr.appendChild(th0);
     CONFIG.PERIODS.forEach(p => {
       const th = document.createElement('th');
-      th.textContent = `P${p}`;
+      th.textContent = typeof p === "number" ? `P${p}` : p;
       th.scope = 'col';
       htr.appendChild(th);
     });
