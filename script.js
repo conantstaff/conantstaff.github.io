@@ -216,8 +216,6 @@ const CONFIG = {
       r.period &&
       CONFIG.PERIODS.includes(r.period) &&
       CONFIG.SUBJECTS.includes(r.subject)
-  );
-
     );
     return norm;
   }
