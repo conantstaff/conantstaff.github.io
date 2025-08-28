@@ -347,3 +347,107 @@ async function loadBoard() {
   loadBoard();
   startPolling();
 })();
+
+// -------------------------
+// Tutoring Schedule Section
+// -------------------------
+
+const tutoringSchedule = {
+  Math: [
+    { period: "1A", time: "8:15-8:40", teacher: "Mr. Melone" },
+    { period: "1B", time: "8:40-9:05", teacher: "Mr. Salas" },
+    { period: "2A", time: "9:10-9:35", teacher: "Mrs. Barkalow" },
+    { period: "2B", time: "9:35-10:00", teacher: "Mr. Davies & Mr. Franco" },
+    { period: "3A", time: "10:05-10:30", teacher: "Mrs. Beardsley & Ms. Toman" },
+    { period: "3B", time: "10:30-10:55", teacher: "Mr. Gosche & Mrs. Hebert" },
+    { period: "4A", time: "11:00-11:25", teacher: "Mr. Stortz" },
+    { period: "4B", time: "11:25-11:50", teacher: "Mrs. Sharkey" },
+    { period: "5A", time: "11:55-12:20", teacher: "Mr. Hay" },
+    { period: "5B", time: "12:20-12:45", teacher: "Mr. Patel & Mrs. Willis" },
+    { period: "6A", time: "12:50-1:15", teacher: "Ms. Soto" },
+    { period: "6B", time: "1:15-1:40", teacher: "Mr. Schols" },
+    { period: "7A", time: "1:45-2:10", teacher: "Mrs. Differding & Mrs. Mogge" },
+    { period: "7B", time: "2:10-2:35", teacher: "Mr. Kurfess" },
+    { period: "8A", time: "2:40-3:05", teacher: "Mrs. Jay" },
+    { period: "8B", time: "3:05-3:30", teacher: "Mrs. McCaliano" },
+  ],
+  English: [
+    { period: "1A", time: "8:15-8:40", teacher: "Ms. Moreno" },
+    { period: "1B", time: "8:40-9:05", teacher: "Ms. Moreno" },
+    { period: "2A", time: "9:10-9:35", teacher: "Mr. Halloran" },
+    { period: "2B", time: "9:35-10:00", teacher: "Mr. Jones" },
+    { period: "3A", time: "10:05-10:30", teacher: "Mrs. Stella" },
+    { period: "3B", time: "10:30-10:55", teacher: "Mrs. Brown" },
+    { period: "4A", time: "11:00-11:25", teacher: "Ms. Gaza" },
+    { period: "4B", time: "11:25-11:50", teacher: "" },
+    { period: "5A", time: "11:55-12:20", teacher: "" },
+    { period: "5B", time: "12:20-12:45", teacher: "Mr. Zerby" },
+    { period: "6A", time: "12:50-1:15", teacher: "Mrs. Apperson-Skobel" },
+    { period: "6B", time: "1:15-1:40", teacher: "Mrs. Apperson-Skobel" },
+    { period: "7A", time: "1:45-2:10", teacher: "Mr. Long" },
+    { period: "7B", time: "2:10-2:35", teacher: "Mr. Avella" },
+    { period: "8A", time: "2:40-3:05", teacher: "Ms. Shoro" },
+    { period: "8B", time: "3:05-3:30", teacher: "Ms. Shoro" },
+  ],
+  Science: [
+    { period: "1A", time: "8:15-8:40", teacher: "Mr. Eschenbrager (Earth Sci, Physics, Biology)" },
+    { period: "1B", time: "8:40-9:05", teacher: "Mrs. Aubin (Biology, Med Terms, Phy Sci)" },
+    { period: "2A", time: "9:10-9:35", teacher: "" },
+    { period: "2B", time: "9:35-10:00", teacher: "Mr. Schiller (Physics, Chemistry)" },
+    { period: "3A", time: "10:05-10:30", teacher: "" },
+    { period: "3B", time: "10:30-10:55", teacher: "Mrs. Lichtenberger (Biology, Anatomy)" },
+    { period: "4A", time: "11:00-11:25", teacher: "" },
+    { period: "4B", time: "11:25-11:50", teacher: "Ms. Bass (Biology, Chemistry, Environmental)" },
+    { period: "5A", time: "11:55-12:20", teacher: "Ms. Galla (Chemistry, Earth Sci)" },
+    { period: "5B", time: "12:20-12:45", teacher: "Ms. Nottoli (Biology, Earth Sci)" },
+    { period: "6A", time: "12:50-1:15", teacher: "" },
+    { period: "6B", time: "1:15-1:40", teacher: "" },
+    { period: "7A", time: "1:45-2:10", teacher: "Mrs. Stanish (Chemistry, Earth Sci, APES)" },
+    { period: "7B", time: "2:10-2:35", teacher: "Mr. Bruce (All Science)" },
+    { period: "8A", time: "2:40-3:05", teacher: "Mrs. Thornley (Biology, Earth Sci, Environmental)" },
+    { period: "8B", time: "3:05-3:30", teacher: "" },
+  ]
+};
+
+function renderTutoringSchedule() {
+  const container = document.getElementById("tutoringSchedule");
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  Object.entries(tutoringSchedule).forEach(([subject, sessions]) => {
+    const subjectHeader = document.createElement("h2");
+    subjectHeader.textContent = subject + " Tutoring Schedule";
+    container.appendChild(subjectHeader);
+
+    const table = document.createElement("table");
+    table.className = "schedule-table";
+
+    const thead = document.createElement("thead");
+    thead.innerHTML = `
+      <tr>
+        <th>Period</th>
+        <th>Time</th>
+        <th>Teacher</th>
+      </tr>
+    `;
+    table.appendChild(thead);
+
+    const tbody = document.createElement("tbody");
+    sessions.forEach(session => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${session.period}</td>
+        <td>${session.time}</td>
+        <td>${session.teacher || "-"}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    table.appendChild(tbody);
+    container.appendChild(table);
+  });
+}
+
+// Run once on page load
+renderTutoringSchedule();
