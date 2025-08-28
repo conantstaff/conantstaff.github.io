@@ -34,23 +34,12 @@ searchInput.addEventListener('input', function () {
 function displayTeacherInfo(teacher) {
   const sortedSchedule = teacher.schedule.sort((a, b) => a.period - b.period);
 
-  const uniqueSchedule = [];
-  const seen = new Set();
-
-  sortedSchedule.forEach(item => {
-    const key = `${item.period}-${item.courseName.trim().toLowerCase()}`;
-    if (!seen.has(key)) {
-      seen.add(key);
-      uniqueSchedule.push(item);
-    }
-  });
-
   teacherInfo.innerHTML =
     `<h2>${teacher.name}</h2>
     <p><strong>Email:</strong> <a href="mailto:${teacher.email}">${teacher.email}</a></p>
     <h3>Class Schedule:</h3>
     ${
-      uniqueSchedule.length === 0
+      sortedSchedule.length === 0
         ? '<p>No classes assigned.</p>'
         : `<table class="schedule-table">
             <tr>
@@ -58,7 +47,7 @@ function displayTeacherInfo(teacher) {
               <th>Course Name</th>
               <th>Room</th>
             </tr>
-            ${uniqueSchedule
+            ${sortedSchedule
               .map(
                 (classItem) =>
                   `<tr>
@@ -358,6 +347,7 @@ async function loadBoard() {
   loadBoard();
   startPolling();
 })();
+
 
 const tutoringSchedule = {
   Math: [
