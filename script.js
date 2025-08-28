@@ -410,7 +410,7 @@ const tutoringSchedule = {
 };
 
 function renderTutoringSchedule() {
-  const container = document.getElementById("tutoringSchedule");
+  const container = document.getElementById("tutoring-schedule");
   if (!container) return;
 
   container.innerHTML = "";
