@@ -51,7 +51,7 @@ function displayTeacherInfo(teacher) {
               .map(
                 (classItem) =>
                   `<tr>
-                    <td>${classItem.period}</td>
+                    <td>${classItem.period == null || classItem.period === "" ? "0" : classItem.period}</td>
                     <td>${classItem.courseName}</td>
                     <td>${classItem.classLoc}</td>
                   </tr>`
