@@ -134,11 +134,35 @@ a:hover { text-decoration: underline; }
   .tutoring-header h1 { font-size: 22px; }
 }
 
-#tutoringSchedule h2 {
-  margin-top: 30px;
-  font-size: 22px;
-  color: var(--red);
-  border-bottom: 2px solid var(--gray-border);
-  padding-bottom: 6px;
+/* Tutoring schedule section */
+#tutoring-schedule {
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 20px 0;
+}
+
+#tutoring-schedule h2 {
+  margin-bottom: 10px;
+  font-size: 1.5em;
+  color: #333;
+}
+
+#tutoring-schedule table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#tutoring-schedule th,
+#tutoring-schedule td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+}
+
+#tutoring-schedule th {
+  background: #0073e6;
+  color: white;
 }
 
