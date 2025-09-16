@@ -362,6 +362,12 @@ async function loadBoard() {
 
 const tutoringSchedule = {
   Math: [
+    { period: "Before School (Mon)", time: "7:30-8:10", teacher: "Mrs. Nielsen, Mrs. Differding" },
+    { period: "Before School (Tue)", time: "7:30-8:10", teacher: "Mrs. Nielsen, Mr. Fivelson" },
+    { period: "Before School (Wed)", time: "7:30-8:10", teacher: "Mrs. Nielsen, Mr. Hay" },
+    { period: "Before School (Thu)", time: "7:30-8:10", teacher: "Mrs. Nielsen, Mr. Salas" },
+    { period: "Before School (Fri)", time: "7:30-8:10", teacher: "Mrs. Nielsen, Mrs. Differding" },
+
     { period: "1A", time: "8:15-8:40", teacher: "Mr. Melone" },
     { period: "1B", time: "8:40-9:05", teacher: "Mr. Salas" },
     { period: "2A", time: "9:10-9:35", teacher: "Mrs. Barkalow" },
@@ -378,8 +384,20 @@ const tutoringSchedule = {
     { period: "7B", time: "2:10-2:35", teacher: "Mr. Kurfess" },
     { period: "8A", time: "2:40-3:05", teacher: "Mrs. Jay" },
     { period: "8B", time: "3:05-3:30", teacher: "Mrs. McCaliano" },
+
+    { period: "After School (Mon)", time: "3:30-4:30", teacher: "Mrs. Nielsen, Mrs. Beardsley" },
+    { period: "After School (Tue)", time: "3:30-4:30", teacher: "Mrs. Nielsen, Mrs. Beardsley" },
+    { period: "After School (Wed)", time: "3:30-4:30", teacher: "Mrs. Nielsen, Mrs. Sharkey" },
+    { period: "After School (Thu)", time: "3:30-4:30", teacher: "Mrs. Nielsen, Ms. Bass" }
   ],
+
   English: [
+    { period: "Before School (Mon)", time: "7:30-8:10", teacher: "Mr. Long" },
+    { period: "Before School (Tue)", time: "7:30-8:10", teacher: "Mr. Trimarco" },
+    { period: "Before School (Wed)", time: "7:30-8:10", teacher: "Mr. Barrientos" },
+    { period: "Before School (Thu)", time: "7:30-8:10", teacher: "Mr. Avella" },
+    { period: "Before School (Fri)", time: "7:30-8:10", teacher: "Ms. Galla, Mr. Barrientos" },
+
     { period: "1A", time: "8:15-8:40", teacher: "Ms. Moreno" },
     { period: "1B", time: "8:40-9:05", teacher: "Ms. Moreno" },
     { period: "2A", time: "9:10-9:35", teacher: "Mr. Halloran" },
@@ -396,8 +414,20 @@ const tutoringSchedule = {
     { period: "7B", time: "2:10-2:35", teacher: "Mr. Avella" },
     { period: "8A", time: "2:40-3:05", teacher: "Ms. Shoro" },
     { period: "8B", time: "3:05-3:30", teacher: "Ms. Shoro" },
+
+    { period: "After School (Mon)", time: "3:30-4:30", teacher: "Ms. Trejo-Hernandez, Ms. Shoro" },
+    { period: "After School (Tue)", time: "3:30-4:30", teacher: "Ms. Anzalone" },
+    { period: "After School (Wed)", time: "3:30-4:30", teacher: "Ms. Kutchek" },
+    { period: "After School (Thu)", time: "3:30-4:30", teacher: "Ms. Shoro" }
   ],
+
   Science: [
+    { period: "Before School (Mon)", time: "7:30-8:10", teacher: "Mr. Long" },
+    { period: "Before School (Tue)", time: "7:30-8:10", teacher: "Mr. Avella" },
+    { period: "Before School (Wed)", time: "7:30-8:10", teacher: "Mr. Barrientos" },
+    { period: "Before School (Thu)", time: "7:30-8:10", teacher: "Mr. Avella" },
+    { period: "Before School (Fri)", time: "7:30-8:10", teacher: "Mr. Barrientos" },
+
     { period: "1A", time: "8:15-8:40", teacher: "Mr. Eschenbrager (Earth Sci, Physics, Biology)" },
     { period: "1B", time: "8:40-9:05", teacher: "Mrs. Aubin (Biology, Med Terms, Phy Sci)" },
     { period: "2A", time: "9:10-9:35", teacher: "" },
@@ -414,6 +444,11 @@ const tutoringSchedule = {
     { period: "7B", time: "2:10-2:35", teacher: "Mr. Bruce (All Science)" },
     { period: "8A", time: "2:40-3:05", teacher: "Mrs. Thornley (Biology, Earth Sci, Environmental)" },
     { period: "8B", time: "3:05-3:30", teacher: "" },
+
+    { period: "After School (Mon)", time: "3:30-4:30", teacher: "Ms. Shoro" },
+    { period: "After School (Tue)", time: "3:30-4:30", teacher: "Mr. Schiller" },
+    { period: "After School (Wed)", time: "3:30-4:30", teacher: "" },
+    { period: "After School (Thu)", time: "3:30-4:30", teacher: "Ms. Bass" }
   ]
 };
 
