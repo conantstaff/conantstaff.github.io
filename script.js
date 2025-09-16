@@ -422,11 +422,11 @@ const tutoringSchedule = {
   ],
 
   Science: [
-    { period: "Before School (Mon)", time: "7:30-8:10", teacher: "Mr. Long" },
-    { period: "Before School (Tue)", time: "7:30-8:10", teacher: "Mr. Avella" },
-    { period: "Before School (Wed)", time: "7:30-8:10", teacher: "Mr. Barrientos" },
-    { period: "Before School (Thu)", time: "7:30-8:10", teacher: "Mr. Avella" },
-    { period: "Before School (Fri)", time: "7:30-8:10", teacher: "Mr. Barrientos" },
+    { period: "Before School (Mon)", time: "7:30-8:10", teacher: "" },
+    { period: "Before School (Tue)", time: "7:30-8:10", teacher: "Mr. Trimarco" },
+    { period: "Before School (Wed)", time: "7:30-8:10", teacher: "" },
+    { period: "Before School (Thu)", time: "7:30-8:10", teacher: "" },
+    { period: "Before School (Fri)", time: "7:30-8:10", teacher: "Ms. Galla" },
 
     { period: "1A", time: "8:15-8:40", teacher: "Mr. Eschenbrager (Earth Sci, Physics, Biology)" },
     { period: "1B", time: "8:40-9:05", teacher: "Mrs. Aubin (Biology, Med Terms, Phy Sci)" },
