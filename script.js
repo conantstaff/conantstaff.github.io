@@ -388,7 +388,7 @@ const tutoringSchedule = {
     { period: "After School (Mon)", time: "3:30-4:30", teacher: "Mrs. Nielsen, Mrs. Beardsley" },
     { period: "After School (Tue)", time: "3:30-4:30", teacher: "Mrs. Nielsen, Mrs. Beardsley" },
     { period: "After School (Wed)", time: "3:30-4:30", teacher: "Mrs. Nielsen, Mrs. Sharkey" },
-    { period: "After School (Thu)", time: "3:30-4:30", teacher: "Mrs. Nielsen, Ms. Bass" }
+    { period: "After School (Thu)", time: "3:30-4:30", teacher: "Mrs. Nielsen" }
   ],
 
   English: [
@@ -415,9 +415,9 @@ const tutoringSchedule = {
     { period: "8A", time: "2:40-3:05", teacher: "Ms. Shoro" },
     { period: "8B", time: "3:05-3:30", teacher: "Ms. Shoro" },
 
-    { period: "After School (Mon)", time: "3:30-4:30", teacher: "Ms. Trejo-Hernandez, Ms. Shoro" },
+    { period: "After School (Mon)", time: "3:30-4:30", teacher: "Ms. Shoro" },
     { period: "After School (Tue)", time: "3:30-4:30", teacher: "Ms. Anzalone" },
-    { period: "After School (Wed)", time: "3:30-4:30", teacher: "Ms. Kutchek" },
+    { period: "After School (Wed)", time: "3:30-4:30", teacher: "" },
     { period: "After School (Thu)", time: "3:30-4:30", teacher: "Ms. Shoro" }
   ],
 
@@ -445,9 +445,9 @@ const tutoringSchedule = {
     { period: "8A", time: "2:40-3:05", teacher: "Mrs. Thornley (Biology, Earth Sci, Environmental)" },
     { period: "8B", time: "3:05-3:30", teacher: "" },
 
-    { period: "After School (Mon)", time: "3:30-4:30", teacher: "Ms. Shoro" },
+    { period: "After School (Mon)", time: "3:30-4:30", teacher: "Ms. Trejo-Hernandez" },
     { period: "After School (Tue)", time: "3:30-4:30", teacher: "Mr. Schiller" },
-    { period: "After School (Wed)", time: "3:30-4:30", teacher: "" },
+    { period: "After School (Wed)", time: "3:30-4:30", teacher: "Ms. Kutchek" },
     { period: "After School (Thu)", time: "3:30-4:30", teacher: "Ms. Bass" }
   ]
 };
