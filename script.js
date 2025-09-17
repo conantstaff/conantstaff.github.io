@@ -359,24 +359,6 @@ async function loadBoard() {
   startPolling();
 })();
 
-// Add dropdown for day filter
-const dayFilterContainer = document.createElement("div");
-dayFilterContainer.id = "day-filter";
-dayFilterContainer.innerHTML = `
-  <label for="daySelect"><strong>Select Day:</strong></label>
-  <select id="daySelect">
-    <option value="Mon">Monday</option>
-    <option value="Tue">Tuesday</option>
-    <option value="Wed">Wednesday</option>
-    <option value="Thu">Thursday</option>
-    <option value="Fri">Friday</option>
-  </select>
-`;
-const scheduleContainer = document.getElementById("tutoring-schedule");
-if (scheduleContainer) {
-  scheduleContainer.parentNode.insertBefore(dayFilterContainer, scheduleContainer);
-}
-
 const tutoringSchedule = {
   Math: [
     { period: "Before School (Mon)", time: "7:30-8:10", teacher: "Mrs. Nielsen, Mrs. Differding" },
