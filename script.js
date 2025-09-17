@@ -163,8 +163,8 @@ const CONFIG = {
   const tsEl = document.getElementById('boardTimestamp');
 
   function isConfiguredUrl(u) {
-  return /^https?:\/\//.test(u) && !u.includes("{{");
-}
+    return /^https?:\/\//.test(u) && !u.includes("{{");
+  }
 
   let pollTimer = null;
 
@@ -208,7 +208,8 @@ const CONFIG = {
           subject: r[idx['subject']],
           request_count: r[idx['request_count']],
           tutor_available: r[idx['tutor_available']],
-          last_updated: r[idx['last_updated']] || ''
+          last_updated: r[idx['last_updated']] || '',
+          day_requested: r[idx['day_requested']] || ''
         }));
       }
     } catch (e) {
@@ -222,7 +223,8 @@ const CONFIG = {
       subject: String(r.subject || '').trim(),
       request_count: Number(String(r.request_count || '0').trim()) || 0,
       tutor_available: String(r.tutor_available || 'NO').trim().toUpperCase(),
-      last_updated: String(r.last_updated || '').trim()
+      last_updated: String(r.last_updated || '').trim(),
+      day_requested: String(r.day_requested || '').trim()
     })).filter(r =>
       r.period &&
       CONFIG.PERIODS.includes(r.period) &&
@@ -319,32 +321,54 @@ const CONFIG = {
     if (statusLive) statusLive.textContent = 'Tutoring board updated.';
   }
 
-async function loadBoard() {
-  setLoading(true);
-  setError(false);
-  try {
-    if (!isConfiguredUrl(CONFIG.SHEET_URL)) {
-      boardEl.innerHTML = '<p style="margin:12px;color:#6b7280;">Connect your Google Sheet to display the tutoring board (set <code>CONFIG.SHEET_URL</code> in <code>script.js</code>).</p>';
-      if (tsEl) tsEl.textContent = '';
-      return;
+  // Create day selector and default to today
+  const daySelector = document.createElement('select');
+  const weekdays = ['Monday','Tuesday','Wednesday','Thursday','Friday'];
+  weekdays.forEach(day => {
+    const opt = document.createElement('option');
+    opt.value = day;
+    opt.textContent = day;
+    daySelector.appendChild(opt);
+  });
+  boardEl.parentNode.insertBefore(daySelector, boardEl);
+
+  let today = new Date().getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+  if (today === 0 || today > 5) today = 1; // weekend => Monday
+  daySelector.value = weekdays[today - 1]; // default value
+
+  daySelector.addEventListener('change', loadBoard);
+
+  async function loadBoard() {
+    setLoading(true);
+    setError(false);
+    try {
+      if (!isConfiguredUrl(CONFIG.SHEET_URL)) {
+        boardEl.innerHTML = '<p style="margin:12px;color:#6b7280;">Connect your Google Sheet to display the tutoring board (set <code>CONFIG.SHEET_URL</code> in <code>script.js</code>).</p>';
+        if (tsEl) tsEl.textContent = '';
+        return;
+      }
+
+      const url = CONFIG.SHEET_URL + (CONFIG.SHEET_URL.includes('?') ? '&' : '?') + 't=' + Date.now();
+      const resp = await fetch(url, { cache: 'no-store' });
+      const text = await resp.text();
+      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+
+      let rowsRaw = parseInput(text, resp.headers.get('Content-Type') || '');
+      let rows = normalizeRows(rowsRaw);
+
+      // Filter by selected day
+      const selectedDay = daySelector.value;
+      rows = rows.filter(r => (r.day_requested || '').toLowerCase() === selectedDay.toLowerCase());
+
+      const map = buildMap(rows);
+      render(map, rows);
+
+    } catch (err) {
+      setError(true, String(err), (err && err.stack) ? err.stack : '');
+    } finally {
+      setLoading(false);
     }
-
-    const url = CONFIG.SHEET_URL + (CONFIG.SHEET_URL.includes('?') ? '&' : '?') + 't=' + Date.now();
-    const resp = await fetch(url, { cache: 'no-store' });
-    const text = await resp.text();
-    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-
-    const rowsRaw = parseInput(text, resp.headers.get('Content-Type') || '');
-    const rows = normalizeRows(rowsRaw);
-    const map = buildMap(rows);
-    render(map, rows);
-
-  } catch (err) {
-    setError(true, String(err), (err && err.stack) ? err.stack : '');
-  } finally {
-    setLoading(false);
   }
-}
 
   function startPolling() {
     if (pollTimer) clearInterval(pollTimer);
