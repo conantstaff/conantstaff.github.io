@@ -359,6 +359,73 @@ async function loadBoard() {
   startPolling();
 })();
 
+// Add dropdown for day filter
+const dayFilterContainer = document.createElement("div");
+dayFilterContainer.id = "day-filter";
+dayFilterContainer.innerHTML = `
+  <label for="daySelect"><strong>Select Day:</strong></label>
+  <select id="daySelect">
+    <option value="Mon">Monday</option>
+    <option value="Tue">Tuesday</option>
+    <option value="Wed">Wednesday</option>
+    <option value="Thu">Thursday</option>
+    <option value="Fri">Friday</option>
+  </select>
+`;
+const scheduleContainer = document.getElementById("tutoring-schedule");
+if (scheduleContainer) {
+  scheduleContainer.parentNode.insertBefore(dayFilterContainer, scheduleContainer);
+}
+
+// Render tutoring schedule with day filter
+function renderTutoringSchedule() {
+  const container = document.getElementById("tutoring-schedule");
+  if (!container) return;
+
+  const selectedDay = document.getElementById("daySelect").value;
+  container.innerHTML = "";
+
+  Object.entries(tutoringSchedule).forEach(([subject, sessions]) => {
+    const subjectHeader = document.createElement("h2");
+    subjectHeader.textContent = `${subject} Tutoring Schedule (${selectedDay})`;
+    container.appendChild(subjectHeader);
+
+    const table = document.createElement("table");
+    table.className = "schedule-table";
+
+    const thead = document.createElement("thead");
+    thead.innerHTML = `
+      <tr>
+        <th>Period</th>
+        <th>Time</th>
+        <th>Teacher</th>
+      </tr>
+    `;
+    table.appendChild(thead);
+
+    const tbody = document.createElement("tbody");
+    sessions
+      .filter(session => session.period.includes(`(${selectedDay})`) || !session.period.includes("(")) 
+      .forEach(session => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${session.period}</td>
+          <td>${session.time}</td>
+          <td>${session.teacher || "-"}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+    table.appendChild(tbody);
+    container.appendChild(table);
+  });
+}
+
+// Re-render when day changes
+document.getElementById("daySelect").addEventListener("change", renderTutoringSchedule);
+
+// Initial render
+renderTutoringSchedule();
 
 const tutoringSchedule = {
   Math: [
