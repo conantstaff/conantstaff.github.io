@@ -167,6 +167,14 @@ a:hover { text-decoration: underline; }
   padding-right: 36px;
 }
 
+.tutor-classes-dropdown div {
+  padding: 2px 0;
+  border-bottom: 1px solid #eee;
+}
+.tutor-classes-dropdown div:last-child {
+  border-bottom: none;
+}
+
 @media (max-width: 640px) {
   .tutoring-header h1 { font-size: 22px; }
 }
