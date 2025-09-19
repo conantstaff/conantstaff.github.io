@@ -167,12 +167,37 @@ a:hover { text-decoration: underline; }
   padding-right: 36px;
 }
 
-.tutor-classes-dropdown div {
-  padding: 2px 0;
-  border-bottom: 1px solid #eee;
+.tutor-classes-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--white);
+  border: 1px solid var(--gray-border);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  padding: 6px 0;
+  margin-top: 6px;
+  z-index: 1000;
+  min-width: 160px;
+  max-width: 220px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #111827;
 }
-.tutor-classes-dropdown div:last-child {
-  border-bottom: none;
+
+.tutor-classes-dropdown div {
+  padding: 6px 12px;
+  cursor: default;
+  transition: background 0.2s, color 0.2s;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tutor-classes-dropdown div:hover {
+  background-color: var(--highlight-bg);
+  color: var(--blue);
 }
 
 @media (max-width: 640px) {
