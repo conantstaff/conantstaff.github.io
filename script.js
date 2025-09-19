@@ -282,8 +282,9 @@ const CONFIG = {
 
     CONFIG.PERIODS.forEach(p => {
       const cell = document.createElement('td');
-      cell.style.position = 'relative';
       const data = map[sub][p];
+
+      cell.style.position = 'relative';
 
       const wrap = document.createElement('div');
       wrap.className = 'badges';
@@ -299,38 +300,31 @@ const CONFIG = {
         stat.textContent = '✅ Tutor Available';
 
         stat.style.cursor = 'pointer';
-        stat.title = 'Click to see tutor classes';
-        stat.addEventListener('click', () => {
-          const existing = cell.querySelector('.tutor-classes-dropdown');
-          if (existing) {
-            existing.remove();
-            return;
-          }
+        stat.addEventListener('click', (e) => {
+          e.stopPropagation();
 
-          const dd = document.createElement('div');
-          dd.className = 'tutor-classes-dropdown';
-          dd.style.position = 'absolute';
-          dd.style.background = '#fff';
-          dd.style.border = '1px solid #ccc';
-          dd.style.padding = '4px 8px';
-          dd.style.marginTop = '4px';
-          dd.style.zIndex = 100;
-          dd.style.maxWidth = '200px';
-          dd.style.boxShadow = '0 2px 6px rgba(0,0,0,0.15)';
+          document.querySelectorAll('.tutor-classes-dropdown').forEach(d => d.remove());
 
-          const classes = (data.tutor_classes || '').split(',').map(c => c.trim()).filter(Boolean);
-          if (classes.length) {
-            classes.forEach(c => {
-              const item = document.createElement('div');
-              item.textContent = c;
-              dd.appendChild(item);
-            });
-          } else {
-            dd.textContent = 'No classes listed';
-          }
+          const tutorClasses = rows
+            .filter(r => r.subject === sub && r.period === p)
+            .map(r => r.tutor_classes)
+            .filter(Boolean)
+            .join(', ')
+            .split(',').map(s => s.trim()).filter(Boolean);
 
-          cell.appendChild(dd);
+          if (!tutorClasses.length) return;
+
+          const dropdown = document.createElement('div');
+          dropdown.className = 'tutor-classes-dropdown';
+          tutorClasses.forEach(c => {
+            const div = document.createElement('div');
+            div.textContent = c;
+            dropdown.appendChild(div);
+          });
+
+          cell.appendChild(dropdown);
         });
+
       } else if (data.count >= CONFIG.REQUEST_THRESHOLD) {
         stat.className = 'badge status-waiting';
         stat.textContent = '🔔 Needs Tutor';
@@ -356,6 +350,10 @@ const CONFIG = {
   const latest = times.sort().slice(-1)[0] || new Date().toISOString();
   if (tsEl) tsEl.textContent = `Last updated: ${latest}`;
   if (statusLive) statusLive.textContent = 'Tutoring board updated.';
+
+  document.addEventListener('click', () => {
+    document.querySelectorAll('.tutor-classes-dropdown').forEach(d => d.remove());
+  });
 }
 
   const daySelector = document.createElement('select');
