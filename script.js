@@ -209,7 +209,8 @@ const CONFIG = {
           request_count: r[idx['request_count']],
           tutor_available: r[idx['tutor_available']],
           last_updated: r[idx['last_updated']] || '',
-          day_requested: r[idx['day_requested']] || ''
+          day_requested: r[idx['day_requested']] || '',
+          tutor_classes: r[idx['tutor_classes']] || ''
         }));
       }
     } catch (e) {
@@ -235,126 +236,133 @@ const CONFIG = {
   }
 
   function buildMap(rows) {
-  const map = {};
-  CONFIG.SUBJECTS.forEach(sub => {
-    map[sub] = {};
-    CONFIG.PERIODS.forEach(p => {
-      map[sub][p] = { count: 0, available: false, tutor_classes: '' };
+    const map = {};
+    CONFIG.SUBJECTS.forEach(sub => {
+      map[sub] = {};
+      CONFIG.PERIODS.forEach(p => {
+        map[sub][p] = { count: 0, available: false, tutor_classes: '' };
+      });
     });
-  });
-  rows.forEach(r => {
-    map[r.subject][r.period] = {
-      count: Math.max(0, r.request_count|0),
-      available: (r.tutor_available || '').toUpperCase() === 'YES',
-      tutor_classes: r.tutor_classes
-    };
-  });
-  return map;
-}
+    rows.forEach(r => {
+      map[r.subject][r.period] = {
+        count: Math.max(0, r.request_count|0),
+        available: (r.tutor_available || '').toUpperCase() === 'YES',
+        tutor_classes: r.tutor_classes
+      };
+    });
+    return map;
+  }
 
   function render(map, rows) {
-  const table = document.createElement('table');
-  table.className = 'board-table';
-  table.setAttribute('role', 'grid');
+    const table = document.createElement('table');
+    table.className = 'board-table';
+    table.setAttribute('role', 'grid');
 
-  const thead = document.createElement('thead');
-  const htr = document.createElement('tr');
-  const th0 = document.createElement('th');
-  th0.textContent = 'Subject \\ Period';
-  th0.scope = 'col';
-  htr.appendChild(th0);
-  CONFIG.PERIODS.forEach(p => {
-    const th = document.createElement('th');
-    th.textContent = typeof p === "number" ? `P${p}` : p;
-    th.scope = 'col';
-    htr.appendChild(th);
-  });
-  thead.appendChild(htr);
-  table.appendChild(thead);
-
-  const tbody = document.createElement('tbody');
-  CONFIG.SUBJECTS.forEach(sub => {
-    const tr = document.createElement('tr');
-    const rowHdr = document.createElement('th');
-    rowHdr.textContent = sub;
-    rowHdr.scope = 'row';
-    tr.appendChild(rowHdr);
-
+    const thead = document.createElement('thead');
+    const htr = document.createElement('tr');
+    const th0 = document.createElement('th');
+    th0.textContent = 'Subject \\ Period';
+    th0.scope = 'col';
+    htr.appendChild(th0);
     CONFIG.PERIODS.forEach(p => {
-      const cell = document.createElement('td');
-      const data = map[sub][p];
+      const th = document.createElement('th');
+      th.textContent = typeof p === "number" ? `P${p}` : p;
+      th.scope = 'col';
+      htr.appendChild(th);
+    });
+    thead.appendChild(htr);
+    table.appendChild(thead);
 
-      cell.style.position = 'relative';
+    const tbody = document.createElement('tbody');
+    CONFIG.SUBJECTS.forEach(sub => {
+      const tr = document.createElement('tr');
+      const rowHdr = document.createElement('th');
+      rowHdr.textContent = sub;
+      rowHdr.scope = 'row';
+      tr.appendChild(rowHdr);
 
-      const wrap = document.createElement('div');
-      wrap.className = 'badges';
+      CONFIG.PERIODS.forEach(p => {
+        const cell = document.createElement('td');
+        const data = map[sub][p];
 
-      const req = document.createElement('span');
-      req.className = 'badge requests';
-      req.textContent = `Requests: ${data.count}`;
-      wrap.appendChild(req);
+        cell.style.position = 'relative';
 
-      const stat = document.createElement('span');
-      if (data.available) {
-        stat.className = 'badge status-available';
-        stat.textContent = '✅ Tutor Available';
+        const wrap = document.createElement('div');
+        wrap.className = 'badges';
 
-        stat.style.cursor = 'pointer';
-        stat.addEventListener('click', (e) => {
-          e.stopPropagation();
+        const req = document.createElement('span');
+        req.className = 'badge requests';
+        req.textContent = `Requests: ${data.count}`;
+        wrap.appendChild(req);
 
-          document.querySelectorAll('.tutor-classes-dropdown').forEach(d => d.remove());
+        const stat = document.createElement('span');
+        if (data.available) {
+          stat.className = 'badge status-available';
+          stat.textContent = '✅ Tutor Available';
 
-          const tutorClasses = rows
-            .filter(r => r.subject === sub && r.period === p)
-            .map(r => r.tutor_classes)
-            .filter(Boolean)
-            .join(', ')
-            .split(',').map(s => s.trim()).filter(Boolean);
+          stat.style.cursor = 'pointer';
+          stat.addEventListener('click', (e) => {
+            e.stopPropagation();
 
-          if (!tutorClasses.length) return;
+            // Remove any other open dropdowns
+            document.querySelectorAll('.tutor-classes-dropdown').forEach(d => d.remove());
 
-          const dropdown = document.createElement('div');
-          dropdown.className = 'tutor-classes-dropdown';
-          tutorClasses.forEach(c => {
-            const div = document.createElement('div');
-            div.textContent = c;
-            dropdown.appendChild(div);
+            // Collect all classes for this subject+period across tutors
+            const tutorClasses = rows
+              .filter(r => r.subject === sub && r.period === p)
+              .flatMap(r => (r.tutor_classes || "").split(',').map(s => s.trim()))
+              .filter(Boolean);
+
+            if (!tutorClasses.length) {
+              const dropdown = document.createElement('div');
+              dropdown.className = 'tutor-classes-dropdown';
+              dropdown.textContent = 'No classes listed';
+              cell.appendChild(dropdown);
+              return;
+            }
+
+            // Build dropdown
+            const dropdown = document.createElement('div');
+            dropdown.className = 'tutor-classes-dropdown';
+            tutorClasses.forEach(c => {
+              const div = document.createElement('div');
+              div.textContent = c;
+              dropdown.appendChild(div);
+            });
+
+            cell.appendChild(dropdown);
           });
 
-          cell.appendChild(dropdown);
-        });
+        } else if (data.count >= CONFIG.REQUEST_THRESHOLD) {
+          stat.className = 'badge status-waiting';
+          stat.textContent = '🔔 Needs Tutor';
+          cell.classList.add('needs-tutor');
+        } else {
+          stat.className = 'badge status-waiting';
+          stat.textContent = '⏳ Waiting';
+        }
+        wrap.appendChild(stat);
 
-      } else if (data.count >= CONFIG.REQUEST_THRESHOLD) {
-        stat.className = 'badge status-waiting';
-        stat.textContent = '🔔 Needs Tutor';
-        cell.classList.add('needs-tutor');
-      } else {
-        stat.className = 'badge status-waiting';
-        stat.textContent = '⏳ Waiting';
-      }
-      wrap.appendChild(stat);
+        cell.appendChild(wrap);
+        tr.appendChild(cell);
+      });
 
-      cell.appendChild(wrap);
-      tr.appendChild(cell);
+      tbody.appendChild(tr);
     });
+    table.appendChild(tbody);
 
-    tbody.appendChild(tr);
-  });
-  table.appendChild(tbody);
+    boardEl.innerHTML = '';
+    boardEl.appendChild(table);
 
-  boardEl.innerHTML = '';
-  boardEl.appendChild(table);
+    const times = rows.map(r => r.last_updated).filter(Boolean);
+    const latest = times.sort().slice(-1)[0] || new Date().toISOString();
+    if (tsEl) tsEl.textContent = `Last updated: ${latest}`;
+    if (statusLive) statusLive.textContent = 'Tutoring board updated.';
 
-  const times = rows.map(r => r.last_updated).filter(Boolean);
-  const latest = times.sort().slice(-1)[0] || new Date().toISOString();
-  if (tsEl) tsEl.textContent = `Last updated: ${latest}`;
-  if (statusLive) statusLive.textContent = 'Tutoring board updated.';
-
-  document.addEventListener('click', () => {
-    document.querySelectorAll('.tutor-classes-dropdown').forEach(d => d.remove());
-  });
-}
+    document.addEventListener('click', () => {
+      document.querySelectorAll('.tutor-classes-dropdown').forEach(d => d.remove());
+    });
+  }
 
   const daySelector = document.createElement('select');
   const weekdays = ['Monday','Tuesday','Wednesday','Thursday','Friday'];
