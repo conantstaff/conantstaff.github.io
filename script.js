@@ -225,6 +225,7 @@ const CONFIG = {
       tutor_available: String(r.tutor_available || 'NO').trim().toUpperCase(),
       last_updated: String(r.last_updated || '').trim(),
       day_requested: String(r.day_requested || '').trim()
+      tutor_classes: String(r.tutor_classes || '').trim()
     })).filter(r =>
       r.period &&
       CONFIG.PERIODS.includes(r.period) &&
@@ -234,94 +235,129 @@ const CONFIG = {
   }
 
   function buildMap(rows) {
-    const map = {};
-    CONFIG.SUBJECTS.forEach(sub => {
-      map[sub] = {};
-      CONFIG.PERIODS.forEach(p => {
-        map[sub][p] = { count: 0, available: false };
-      });
+  const map = {};
+  CONFIG.SUBJECTS.forEach(sub => {
+    map[sub] = {};
+    CONFIG.PERIODS.forEach(p => {
+      map[sub][p] = { count: 0, available: false, tutor_classes: '' };
     });
-    rows.forEach(r => {
-      map[r.subject][r.period] = {
-        count: Math.max(0, r.request_count|0),
-        available: (r.tutor_available || '').toUpperCase() === 'YES'
-      };
-    });
-    return map;
-  }
+  });
+  rows.forEach(r => {
+    map[r.subject][r.period] = {
+      count: Math.max(0, r.request_count|0),
+      available: (r.tutor_available || '').toUpperCase() === 'YES',
+      tutor_classes: r.tutor_classes
+    };
+  });
+  return map;
+}
 
   function render(map, rows) {
-    const table = document.createElement('table');
-    table.className = 'board-table';
-    table.setAttribute('role', 'grid');
+  const table = document.createElement('table');
+  table.className = 'board-table';
+  table.setAttribute('role', 'grid');
 
-    const thead = document.createElement('thead');
-    const htr = document.createElement('tr');
-    const th0 = document.createElement('th');
-    th0.textContent = 'Subject \\ Period';
-    th0.scope = 'col';
-    htr.appendChild(th0);
+  const thead = document.createElement('thead');
+  const htr = document.createElement('tr');
+  const th0 = document.createElement('th');
+  th0.textContent = 'Subject \\ Period';
+  th0.scope = 'col';
+  htr.appendChild(th0);
+  CONFIG.PERIODS.forEach(p => {
+    const th = document.createElement('th');
+    th.textContent = typeof p === "number" ? `P${p}` : p;
+    th.scope = 'col';
+    htr.appendChild(th);
+  });
+  thead.appendChild(htr);
+  table.appendChild(thead);
+
+  const tbody = document.createElement('tbody');
+  CONFIG.SUBJECTS.forEach(sub => {
+    const tr = document.createElement('tr');
+    const rowHdr = document.createElement('th');
+    rowHdr.textContent = sub;
+    rowHdr.scope = 'row';
+    tr.appendChild(rowHdr);
+
     CONFIG.PERIODS.forEach(p => {
-      const th = document.createElement('th');
-      th.textContent = typeof p === "number" ? `P${p}` : p;
-      th.scope = 'col';
-      htr.appendChild(th);
+      const cell = document.createElement('td');
+      cell.style.position = 'relative';
+      const data = map[sub][p];
+
+      const wrap = document.createElement('div');
+      wrap.className = 'badges';
+
+      const req = document.createElement('span');
+      req.className = 'badge requests';
+      req.textContent = `Requests: ${data.count}`;
+      wrap.appendChild(req);
+
+      const stat = document.createElement('span');
+      if (data.available) {
+        stat.className = 'badge status-available';
+        stat.textContent = '✅ Tutor Available';
+
+        stat.style.cursor = 'pointer';
+        stat.title = 'Click to see tutor classes';
+        stat.addEventListener('click', () => {
+          const existing = cell.querySelector('.tutor-classes-dropdown');
+          if (existing) {
+            existing.remove();
+            return;
+          }
+
+          const dd = document.createElement('div');
+          dd.className = 'tutor-classes-dropdown';
+          dd.style.position = 'absolute';
+          dd.style.background = '#fff';
+          dd.style.border = '1px solid #ccc';
+          dd.style.padding = '4px 8px';
+          dd.style.marginTop = '4px';
+          dd.style.zIndex = 100;
+          dd.style.maxWidth = '200px';
+          dd.style.boxShadow = '0 2px 6px rgba(0,0,0,0.15)';
+
+          const classes = (data.tutor_classes || '').split(',').map(c => c.trim()).filter(Boolean);
+          if (classes.length) {
+            classes.forEach(c => {
+              const item = document.createElement('div');
+              item.textContent = c;
+              dd.appendChild(item);
+            });
+          } else {
+            dd.textContent = 'No classes listed';
+          }
+
+          cell.appendChild(dd);
+        });
+      } else if (data.count >= CONFIG.REQUEST_THRESHOLD) {
+        stat.className = 'badge status-waiting';
+        stat.textContent = '🔔 Needs Tutor';
+        cell.classList.add('needs-tutor');
+      } else {
+        stat.className = 'badge status-waiting';
+        stat.textContent = '⏳ Waiting';
+      }
+      wrap.appendChild(stat);
+
+      cell.appendChild(wrap);
+      tr.appendChild(cell);
     });
-    thead.appendChild(htr);
-    table.appendChild(thead);
 
-    const tbody = document.createElement('tbody');
-    CONFIG.SUBJECTS.forEach(sub => {
-      const tr = document.createElement('tr');
-      const rowHdr = document.createElement('th');
-      rowHdr.textContent = sub;
-      rowHdr.scope = 'row';
-      tr.appendChild(rowHdr);
+    tbody.appendChild(tr);
+  });
+  table.appendChild(tbody);
 
-      CONFIG.PERIODS.forEach(p => {
-        const cell = document.createElement('td');
-        const data = map[sub][p];
+  boardEl.innerHTML = '';
+  boardEl.appendChild(table);
 
-        const wrap = document.createElement('div');
-        wrap.className = 'badges';
+  const times = rows.map(r => r.last_updated).filter(Boolean);
+  const latest = times.sort().slice(-1)[0] || new Date().toISOString();
+  if (tsEl) tsEl.textContent = `Last updated: ${latest}`;
+  if (statusLive) statusLive.textContent = 'Tutoring board updated.';
+}
 
-        const req = document.createElement('span');
-        req.className = 'badge requests';
-        req.textContent = `Requests: ${data.count}`;
-        wrap.appendChild(req);
-
-        const stat = document.createElement('span');
-        if (data.available) {
-          stat.className = 'badge status-available';
-          stat.textContent = '✅ Tutor Available';
-        } else if (data.count >= CONFIG.REQUEST_THRESHOLD) {
-          stat.className = 'badge status-waiting';
-          stat.textContent = '🔔 Needs Tutor';
-          cell.classList.add('needs-tutor');
-        } else {
-          stat.className = 'badge status-waiting';
-          stat.textContent = '⏳ Waiting';
-        }
-        wrap.appendChild(stat);
-
-        cell.appendChild(wrap);
-        tr.appendChild(cell);
-      });
-
-      tbody.appendChild(tr);
-    });
-    table.appendChild(tbody);
-
-    boardEl.innerHTML = '';
-    boardEl.appendChild(table);
-
-    const times = rows.map(r => r.last_updated).filter(Boolean);
-    const latest = times.sort().slice(-1)[0] || new Date().toISOString();
-    if (tsEl) tsEl.textContent = `Last updated: ${latest}`;
-    if (statusLive) statusLive.textContent = 'Tutoring board updated.';
-  }
-
-  // Create day selector and default to today
   const daySelector = document.createElement('select');
   const weekdays = ['Monday','Tuesday','Wednesday','Thursday','Friday'];
   weekdays.forEach(day => {
@@ -332,9 +368,9 @@ const CONFIG = {
   });
   boardEl.parentNode.insertBefore(daySelector, boardEl);
 
-  let today = new Date().getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
-  if (today === 0 || today > 5) today = 1; // weekend => Monday
-  daySelector.value = weekdays[today - 1]; // default value
+  let today = new Date().getDay();
+  if (today === 0 || today > 5) today = 1;
+  daySelector.value = weekdays[today - 1];
 
   daySelector.addEventListener('change', loadBoard);
 
@@ -356,7 +392,6 @@ const CONFIG = {
       let rowsRaw = parseInput(text, resp.headers.get('Content-Type') || '');
       let rows = normalizeRows(rowsRaw);
 
-      // Filter by selected day
       const selectedDay = daySelector.value;
       rows = rows.filter(r => (r.day_requested || '').toLowerCase() === selectedDay.toLowerCase());
 
