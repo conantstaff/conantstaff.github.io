@@ -218,22 +218,22 @@ const CONFIG = {
     }
   }
 
-  function normalizeRows(rows) {
-    const norm = rows.map(r => ({
-      period: String(r.period || '').trim(),
-      subject: String(r.subject || '').trim(),
-      request_count: Number(String(r.request_count || '0').trim()) || 0,
-      tutor_available: String(r.tutor_available || 'NO').trim().toUpperCase(),
-      last_updated: String(r.last_updated || '').trim(),
-      day_requested: String(r.day_requested || '').trim(),
-      tutor_classes: String(r.tutor_classes || '').trim()
-    })).filter(r =>
-      r.period &&
-      CONFIG.PERIODS.includes(r.period) &&
-      CONFIG.SUBJECTS.includes(r.subject)
-    );
-    return norm;
-  }
+function normalizeRows(rows) {
+  const norm = rows.map(r => ({
+    period: String(r.period || '').trim(),
+    subject: String(r.subject || '').trim(),
+    request_count: Number(String(r.request_count || '0').trim()) || 0,
+    tutor_available: String(r.tutor_available || 'NO').trim().toUpperCase(),
+    last_updated: String(r.last_updated || '').trim(),
+    day_requested: String(r.day_requested || '').trim(),
+    tutor_classes: String(r.tutor_classes || '').trim()
+  })).filter(r =>
+    r.period &&
+    CONFIG.PERIODS.includes(r.period) &&
+    CONFIG.SUBJECTS.map(s => s.toLowerCase()).includes(r.subject.toLowerCase())
+  );
+  return norm;
+}
 
   function buildMap(rows) {
     const map = {};
