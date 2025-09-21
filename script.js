@@ -145,7 +145,7 @@ function findOtherTeachers(courseName, currentTeacher) {
 }
 
 const CONFIG = {
-  SHEET_URL: "https://docs.google.com/spreadsheets/d/e/2PACX-1vRg8iwQL5O4lVlG3mKMDyAYpMy9904W8FCnrcHLT57Ex_LF24-T0t1Su2ffkje72JCLn-dvazuB42pl/pub?gid=241342173&single=true&output=csv", // keep as string placeholder
+  SHEET_URL: "https://docs.google.com/spreadsheets/d/e/2PACX-1vRg8iwQL5O4lVlG3mKMDyAYpMy9904W8FCnrcHLT57Ex_LF24-T0t1Su2ffkje72JCLn-dvazuB42pl/pub?gid=241342173&single=true&output=csv",
   REQUEST_THRESHOLD: 3,
   POLL_MS: 60000,
   SUBJECTS: ["Math", "English", "Science"],
@@ -322,23 +322,28 @@ const CONFIG = {
 
             const unique = Array.from(new Set(tutorClasses.map(s => s.trim())));
 
-            if (!unique.length) {
-              const dropdown = document.createElement('div');
-              dropdown.className = 'tutor-classes-dropdown';
-              dropdown.textContent = 'No classes listed';
-              cell.appendChild(dropdown);
-              return;
-            }
-
             const dropdown = document.createElement('div');
             dropdown.className = 'tutor-classes-dropdown';
-            unique.forEach(c => {
-              const div = document.createElement('div');
-              div.textContent = c;
-              dropdown.appendChild(div);
-            });
-
+            if (!unique.length) {
+              dropdown.textContent = 'No classes listed';
+            } else {
+              unique.forEach(c => {
+                const div = document.createElement('div');
+                div.textContent = c;
+                dropdown.appendChild(div);
+              });
+            }
             cell.appendChild(dropdown);
+
+            const rect = dropdown.getBoundingClientRect();
+            const viewportHeight = window.innerHeight;
+            if (rect.bottom > viewportHeight) {
+              dropdown.style.bottom = '100%';
+              dropdown.style.top = 'auto';
+            } else {
+              dropdown.style.top = '100%';
+              dropdown.style.bottom = 'auto';
+            }
           });
 
         } else if (data.count >= CONFIG.REQUEST_THRESHOLD) {
