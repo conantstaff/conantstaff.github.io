@@ -218,22 +218,22 @@ const CONFIG = {
     }
   }
 
-function normalizeRows(rows) {
-  const norm = rows.map(r => ({
-    period: String(r.period || '').trim(),
-    subject: String(r.subject || '').trim(),
-    request_count: Number(String(r.request_count || '0').trim()) || 0,
-    tutor_available: String(r.tutor_available || 'NO').trim().toUpperCase(),
-    last_updated: String(r.last_updated || '').trim(),
-    day_requested: String(r.day_requested || '').trim(),
-    tutor_classes: String(r.tutor_classes || '').trim()
-  })).filter(r =>
-    r.period &&
-    CONFIG.PERIODS.includes(r.period) &&
-    CONFIG.SUBJECTS.map(s => s.toLowerCase()).includes(r.subject.toLowerCase())
-  );
-  return norm;
-}
+  function normalizeRows(rows) {
+    const norm = rows.map(r => ({
+      period: String(r.period || '').trim(),
+      subject: String(r.subject || '').trim(),
+      request_count: Number(String(r.request_count || '0').trim()) || 0,
+      tutor_available: String(r.tutor_available || 'NO').trim().toUpperCase(),
+      last_updated: String(r.last_updated || '').trim(),
+      day_requested: String(r.day_requested || '').trim(),
+      tutor_classes: String(r.tutor_classes || '').trim()
+    })).filter(r =>
+      r.period &&
+      CONFIG.PERIODS.includes(r.period) &&
+      CONFIG.SUBJECTS.map(s => s.toLowerCase()).includes(r.subject.toLowerCase())
+    );
+    return norm;
+  }
 
   function buildMap(rows) {
     const map = {};
@@ -307,13 +307,27 @@ function normalizeRows(rows) {
             // Remove any other open dropdowns
             document.querySelectorAll('.tutor-classes-dropdown').forEach(d => d.remove());
 
-            // Collect all classes for this subject+period across tutors
+            // --- Robust, normalized matching for subject & period ---
+            function normSubject(s){ return String(s || '').trim().toLowerCase(); }
+            function normPeriod(v){
+              const t = String(v || '').trim();
+              // if both look numeric, compare numeric canonical form; else lowercase string
+              if (t !== '' && !isNaN(t)) return String(Number(t));
+              return t.toLowerCase();
+            }
+            const targetSub = normSubject(sub);
+            const targetPeriod = normPeriod(p);
+
+            // Collect all classes for this subject+period across tutors (normalized matching)
             const tutorClasses = rows
-              .filter(r => r.subject === sub && r.period === p)
-              .flatMap(r => (r.tutor_classes || "").split(',').map(s => s.trim()))
+              .filter(r => normSubject(r.subject) === targetSub && normPeriod(r.period) === targetPeriod)
+              .flatMap(r => (String(r.tutor_classes || "").split(',').map(s => s.trim())))
               .filter(Boolean);
 
-            if (!tutorClasses.length) {
+            // Deduplicate while preserving order
+            const unique = Array.from(new Set(tutorClasses.map(s => s.trim())));
+
+            if (!unique.length) {
               const dropdown = document.createElement('div');
               dropdown.className = 'tutor-classes-dropdown';
               dropdown.textContent = 'No classes listed';
@@ -324,7 +338,7 @@ function normalizeRows(rows) {
             // Build dropdown
             const dropdown = document.createElement('div');
             dropdown.className = 'tutor-classes-dropdown';
-            tutorClasses.forEach(c => {
+            unique.forEach(c => {
               const div = document.createElement('div');
               div.textContent = c;
               dropdown.appendChild(div);
