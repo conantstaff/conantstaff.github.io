@@ -171,7 +171,6 @@ a:hover { text-decoration: underline; }
   position: absolute;
   left: 0;
   top: 100%;
-  margin-top: 6px;
   background: white;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -234,4 +233,3 @@ a:hover { text-decoration: underline; }
   background: #0073e6;
   color: white;
 }
-
