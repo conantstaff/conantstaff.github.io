@@ -411,6 +411,7 @@ const CONFIG = {
 
       let rowsRaw = parseInput(text, resp.headers.get('Content-Type') || '');
       let rows = normalizeRows(rowsRaw);
+      console.log("Normalized rows:", rows);
 
       const selectedDay = daySelector.value;
       rows = rows.filter(r => (r.day_requested || '').toLowerCase() === selectedDay.toLowerCase());
