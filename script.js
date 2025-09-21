@@ -304,27 +304,22 @@ const CONFIG = {
           stat.addEventListener('click', (e) => {
             e.stopPropagation();
 
-            // Remove any other open dropdowns
             document.querySelectorAll('.tutor-classes-dropdown').forEach(d => d.remove());
 
-            // --- Robust, normalized matching for subject & period ---
             function normSubject(s){ return String(s || '').trim().toLowerCase(); }
             function normPeriod(v){
               const t = String(v || '').trim();
-              // if both look numeric, compare numeric canonical form; else lowercase string
               if (t !== '' && !isNaN(t)) return String(Number(t));
               return t.toLowerCase();
             }
             const targetSub = normSubject(sub);
             const targetPeriod = normPeriod(p);
 
-            // Collect all classes for this subject+period across tutors (normalized matching)
             const tutorClasses = rows
               .filter(r => normSubject(r.subject) === targetSub && normPeriod(r.period) === targetPeriod)
               .flatMap(r => (String(r.tutor_classes || "").split(',').map(s => s.trim())))
               .filter(Boolean);
 
-            // Deduplicate while preserving order
             const unique = Array.from(new Set(tutorClasses.map(s => s.trim())));
 
             if (!unique.length) {
@@ -335,7 +330,6 @@ const CONFIG = {
               return;
             }
 
-            // Build dropdown
             const dropdown = document.createElement('div');
             dropdown.className = 'tutor-classes-dropdown';
             unique.forEach(c => {
