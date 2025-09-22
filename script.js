@@ -337,12 +337,17 @@ const CONFIG = {
 
             const rect = dropdown.getBoundingClientRect();
             const viewportHeight = window.innerHeight;
-            if (rect.bottom > viewportHeight) {
+            if (sub.toLowerCase() === "science") {
               dropdown.style.bottom = '100%';
               dropdown.style.top = 'auto';
             } else {
-              dropdown.style.top = '100%';
-              dropdown.style.bottom = 'auto';
+              if (rect.bottom > viewportHeight) {
+                dropdown.style.bottom = '100%';
+                dropdown.style.top = 'auto';
+              } else {
+                dropdown.style.top = '100%';
+                dropdown.style.bottom = 'auto';
+              }
             }
           });
 
