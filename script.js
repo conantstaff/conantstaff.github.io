@@ -1,4 +1,4 @@
-console.log('Teachers array:', teachers);
+console.log('Teachers array:', teachers); 
 
 const searchInput = document.getElementById('teacherSearch');
 const suggestionsList = document.getElementById('suggestions');
