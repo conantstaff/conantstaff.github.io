@@ -1,4 +1,3 @@
-// teachers.js
 console.log("Teachers data loaded");
 
 const teachers = [
